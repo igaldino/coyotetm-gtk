@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface domain="coyotetm">
+  <!-- interface-requires gtk+ 3.8 -->
+  <template class="CtmWindow" parent="GtkApplicationWindow">
+    <property name="default_width">640</property>
+    <property name="default_height">480</property>
+    <child type="titlebar">
+      <object class="GtkHeaderBar" id="header_bar">
+        <property name="visible">1</property>
+        <property name="show-close-button">1</property>
+        <child>
+          <object class="GtkStack" id="header_start_stack">
+            <property name="visible">1</property>
+            <property name="hhomogeneous">0</property>
+            <child>
+              <object class="GtkButton" id="new_task_button">
+                <property name="visible">1</property>
+                <property name="use-underline">1</property>
+                <property name="label" translatable="yes">_New Task</property>
+              </object>
+              <packing>
+                <property name="name">main</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton">
+                <property name="visible">1</property>
+                <style>
+                  <class name="image-button"/>
+                </style>
+                <accelerator key="Left" modifiers="GDK_MOD1_MASK" signal="activate"/>
+                <child internal-child="accessible">
+                  <object class="AtkObject">
+                    <property name="accessible-name" translatable="yes">Go back</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">go-previous-symbolic</property>
+                    <property name="icon-size">1</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="name">back</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+        <child type="title">
+          <object class="GtkStack" id="header_title_stack">
+            <property name="visible">1</property>
+            <property name="hhomogeneous">0</property>
+            <child>
+              <object class="GtkStackSwitcher">
+                <property name="visible">1</property>
+                <property name="stack">main_stack</property>
+              </object>
+              <packing>
+                <property name="name">main</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" bind-source="header_bar" bind-property="title"/>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="name">title</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkStack" id="header_end_stack">
+            <property name="visible">1</property>
+            <property name="hhomogeneous">0</property>
+            <child>
+              <object class="GtkToggleButton" id="search_button">
+                <property name="visible">1</property>
+                <style>
+                  <class name="image-button"/>
+                </style>
+                <child internal-child="accessible">
+                  <object class="AtkObject">
+                    <property name="accessible-name" translatable="yes">Search</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">edit-find-symbolic</property>
+                    <property name="icon-size">1</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="name">search</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton">
+                <property name="visible">1</property>
+                <property name="use-underline">1</property>
+                <property name="label" translatable="yes">_Save</property>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
+              </object>
+              <packing>
+                <property name="name">edit</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEventBox">
+                <property name="visible">1</property>
+              </object>
+              <packing>
+                <property name="name">list</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="pack-type">end</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel" id="search_bar">
+            <property name="visible">1</property>
+            <!--property name="search-mode-enabled" bind-source="search_button" bind-property="active" bind-flags="bidirectional"/-->
+          </object>
+        </child>
+        <child>
+          <object class="GtkStack" id="main_stack">
+            <property name="visible">1</property>
+            <child>
+              <object class="GtkLabel" id="tasks_page"/>
+              <packing>
+                <property name="name">tasks</property>
+                <property name="title" translatable="yes">Tasks</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="projects_page"/>
+              <packing>
+                <property name="name">projecs</property>
+                <property name="title" translatable="yes">Projects</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="people_page"/>
+              <packing>
+                <property name="name">people</property>
+                <property name="title" translatable="yes">People</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="history_page"/>
+              <packing>
+                <property name="name">history</property>
+                <property name="title" translatable="yes">History</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
+	

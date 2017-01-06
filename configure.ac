@@ -6,17 +6,6 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC
 AM_PROG_CC_C_O
 
-dnl AC_PATH_PROG(PKGCONFIG,pkg-config)
-dnl if test "x$PKGCONFIG" = x
-dnl then
-dnl    AC_MSG_ERROR([pkg-config is mandatory.])
-dnl else
-dnl    CFLAGS="`$PKGCONFIG --cflags gtk+-3.0 sqlite3` $CFLAGS"
-dnl    LIBS="`$PKGCONFIG --libs gtk+-3.0 sqlite3` $LIBS"
-dnl fi
-
-dnl GLIB_GSETTINGS
-
 PKG_CHECK_MODULES([COYOTETM], [gobject-2.0] [gom-1.0] [gtk+-3.0])
 
 AC_CONFIG_FILES([Makefile src/Makefile])

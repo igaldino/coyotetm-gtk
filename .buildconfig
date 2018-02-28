@@ -1,8 +1,0 @@
-[default]
-name=Configuração padrão
-device=local
-runtime=host
-prefix=/home/isaque/.cache/gnome-builder/install/coyotetm-gtk/host
-default=true
-config-opts=
-app-id=

@@ -16,6 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "ctm-app.h"
 #include "ctm-window.h"
 
@@ -45,7 +49,7 @@ about_activated (GSimpleAction *action,
 												 "program-name", "CoyoteTM",
 												 "version", g_strdup_printf("%s", PACKAGE_VERSION),
 												 "copyright", "(C) 2000-2017 Isaque Galdino",
-												 "license-type", GTK_LICENSE_GPL_2_0,
+												 "license-type", GTK_LICENSE_GPL_3_0,
 												 "website", "http://sourceforge.net/projects/coyotetm/",
 												 "comments", "Manage tasks like a coyote",
 												 "authors", authors,

@@ -11,11 +11,11 @@ config_h = configuration_data()
 set_defines = [
   # package
   ['PACKAGE', coyotetm_name],
-  ['PACKAGE_BUGREPORT', 'http://bugzilla.gnome.org/enter_bug.cgi?product=' + coyotetm_name],
+  ['PACKAGE_BUGREPORT', 'https://github.com/igaldino/' + coyotetm_name + '/issues'],
   ['PACKAGE_NAME', coyotetm_name],
   ['PACKAGE_STRING', '@0@ @1@'.format(coyotetm_name, coyotetm_version)],
   ['PACKAGE_TARNAME', coyotetm_name],
-  ['PACKAGE_URL', 'https://wiki.gnome.org/Apps/coyotetm'],
+  ['PACKAGE_URL', 'https://github.com/igaldino/' + coyotetm_name],
   ['PACKAGE_VERSION', coyotetm_version],
   ['VERSION', coyotetm_version]
 ]

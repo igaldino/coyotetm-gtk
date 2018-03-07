@@ -55,9 +55,9 @@ ctm_event_finalize (GObject *object)
 
 static void
 ctm_event_get_property (GObject    *object,
-												guint       prop_id,
-												GValue     *value,
-												GParamSpec *pspec)
+                        guint       prop_id,
+                        GValue     *value,
+                        GParamSpec *pspec)
 {
   CtmEvent *self = (CtmEvent *)object;
 
@@ -85,9 +85,9 @@ ctm_event_get_property (GObject    *object,
 
 static void
 ctm_event_set_property (GObject      *object,
-												guint         prop_id,
-												const GValue *value,
-												GParamSpec   *pspec)
+                        guint         prop_id,
+                        const GValue *value,
+                        GParamSpec   *pspec)
 {
   CtmEvent *self = (CtmEvent *)object;
 
@@ -127,44 +127,44 @@ ctm_event_class_init (CtmEventClass *klass)
 
   properties [PROP_ID] =
     g_param_spec_uint ("id",
-											 "ID",
-											 "The internal id of the event",
-											 0,
-											 G_MAXUINT,
-											 0,
-											 G_PARAM_READWRITE);
+                       "ID",
+                       "The internal id of the event",
+                       0,
+                       G_MAXUINT,
+                       0,
+                       G_PARAM_READWRITE);
 
   properties [PROP_TASK_ID] =
     g_param_spec_uint ("task_id",
-											 "Task ID",
-											 "The internal id of this event's task",
-											 0,
-											 G_MAXUINT,
-											 0,
-											 G_PARAM_READWRITE);
+                       "Task ID",
+                       "The internal id of this event's task",
+                       0,
+                       G_MAXUINT,
+                       0,
+                       G_PARAM_READWRITE);
 
   properties [PROP_WHEN] =
     g_param_spec_boxed ("when",
-												"When",
-												"When this event happened",
-												G_TYPE_DATE_TIME,
-												G_PARAM_READWRITE);
+                        "When",
+                        "When this event happened",
+                        G_TYPE_DATE_TIME,
+                        G_PARAM_READWRITE);
 
   properties [PROP_TIME] =
     g_param_spec_float ("time",
-												"Time",
-												"How long this event took",
-												0,
-												G_MAXFLOAT,
-												0,
-												G_PARAM_READWRITE);
+                        "Time",
+                        "How long this event took",
+                        0,
+                        G_MAXFLOAT,
+                        0,
+                        G_PARAM_READWRITE);
 
   properties [PROP_NOTES] =
     g_param_spec_string ("notes",
-												 "Notes",
-												 "Notes of the event",
-												 NULL,
-												 (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+                         "Notes",
+                         "Notes of the event",
+                         NULL,
+                         (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, LAST_PROP, properties);
 
@@ -195,7 +195,7 @@ ctm_event_get_id (CtmEvent *self)
 
 void
 ctm_event_set_id (CtmEvent    *self,
-									const guint  id)
+                  const guint  id)
 {
   self->id = id;
 }
@@ -208,7 +208,7 @@ ctm_event_get_task_id (CtmEvent *self)
 
 void
 ctm_event_set_task_id (CtmEvent    *self,
-											 const guint  task_id)
+                       const guint  task_id)
 {
   self->task_id = task_id;
 }
@@ -221,17 +221,17 @@ ctm_event_get_when (CtmEvent *self)
 
 void
 ctm_event_set_when (CtmEvent  *self,
-										GDateTime *when)
+                    GDateTime *when)
 {
   if (when && (self->when &&
-							 !g_date_time_equal (when, self->when) ||
-							 !self->when))
+               !g_date_time_equal (when, self->when) ||
+               !self->when))
     {
       g_clear_pointer (&self->when, g_date_time_unref);
       self->when = g_date_time_new_local (g_date_time_get_year (when),
-																					g_date_time_get_month (when),
-																					g_date_time_get_day_of_month (when),
-																					0, 0, 0.0);
+                                          g_date_time_get_month (when),
+                                          g_date_time_get_day_of_month (when),
+                                          0, 0, 0.0);
     }
 }
 
@@ -243,7 +243,7 @@ ctm_event_get_time (CtmEvent *self)
 
 void
 ctm_event_set_time (CtmEvent *self,
-										gfloat    time)
+                    gfloat    time)
 {
   self->time = time;
 }
@@ -256,7 +256,7 @@ ctm_event_get_notes (CtmEvent *self)
 
 void
 ctm_event_set_notes (CtmEvent     *self,
-										 const gchar *notes)
+                     const gchar *notes)
 {
   if (g_strcmp0 (notes, self->notes))
     {

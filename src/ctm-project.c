@@ -51,9 +51,9 @@ ctm_project_finalize (GObject *object)
 
 static void
 ctm_project_get_property (GObject    *object,
-													guint       prop_id,
-													GValue     *value,
-													GParamSpec *pspec)
+                          guint       prop_id,
+                          GValue     *value,
+                          GParamSpec *pspec)
 {
   CtmProject *self = (CtmProject *)object;
 
@@ -75,9 +75,9 @@ ctm_project_get_property (GObject    *object,
 
 static void
 ctm_project_set_property (GObject      *object,
-													guint         prop_id,
-													const GValue *value,
-													GParamSpec   *pspec)
+                          guint         prop_id,
+                          const GValue *value,
+                          GParamSpec   *pspec)
 {
   CtmProject *self = (CtmProject *)object;
 
@@ -111,26 +111,26 @@ ctm_project_class_init (CtmProjectClass *klass)
 
   properties [PROP_ID] =
     g_param_spec_uint ("id",
-											 "ID",
-											 "The internal id of the project",
-											 0,
-											 G_MAXUINT,
-											 0,
-											 G_PARAM_READWRITE);
+                       "ID",
+                       "The internal id of the project",
+                       0,
+                       G_MAXUINT,
+                       0,
+                       G_PARAM_READWRITE);
 
   properties [PROP_NAME] =
     g_param_spec_string ("name",
-												 "Name",
-												 "The name of the project",
-												 NULL,
-												 (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+                         "Name",
+                         "The name of the project",
+                         NULL,
+                         (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   properties [PROP_DESCRIPTION] =
     g_param_spec_string ("description",
-												 "Description",
-												 "The description of the project",
-												 NULL,
-												 (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+                         "Description",
+                         "The description of the project",
+                         NULL,
+                         (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, LAST_PROP, properties);
 
@@ -172,7 +172,7 @@ ctm_project_get_name (CtmProject *self)
 
 void
 ctm_project_set_name (CtmProject  *self,
-											const gchar *name)
+                      const gchar *name)
 {
   if (g_strcmp0 (name, self->name))
     {
@@ -189,7 +189,7 @@ ctm_project_get_description (CtmProject *self)
 
 void
 ctm_project_set_description (CtmProject  *self,
-														 const gchar *description)
+                             const gchar *description)
 {
   if (g_strcmp0 (description, self->description))
     {

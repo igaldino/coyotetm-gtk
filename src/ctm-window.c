@@ -20,7 +20,7 @@
 
 struct _CtmWindow
 {
-	GtkApplicationWindow  parent_instance;
+  GtkApplicationWindow  parent_instance;
 };
 
 G_DEFINE_TYPE (CtmWindow, ctm_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -28,31 +28,31 @@ G_DEFINE_TYPE (CtmWindow, ctm_window, GTK_TYPE_APPLICATION_WINDOW)
 CtmWindow *
 ctm_window_new (CtmApp *app)
 {
-	return g_object_new (CTM_TYPE_WINDOW, "application", app, NULL);
+  return g_object_new (CTM_TYPE_WINDOW, "application", app, NULL);
 }
 
 static void
 ctm_window_finalize (GObject *object)
 {
-	CtmWindow *self = (CtmWindow *)object;
+  CtmWindow *self = (CtmWindow *)object;
 
-	G_OBJECT_CLASS (ctm_window_parent_class)->finalize (object);
+  G_OBJECT_CLASS (ctm_window_parent_class)->finalize (object);
 }
 
 static void
 ctm_window_class_init (CtmWindowClass *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-	object_class->finalize = ctm_window_finalize;
+  object_class->finalize = ctm_window_finalize;
 
-	gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/CoyoteTM/ctm-window.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/CoyoteTM/ctm-window.ui");
 }
 
 static void
 ctm_window_init (CtmWindow *self)
 {
-	gtk_widget_init_template (GTK_WIDGET (self));
+  gtk_widget_init_template (GTK_WIDGET (self));
 }
 

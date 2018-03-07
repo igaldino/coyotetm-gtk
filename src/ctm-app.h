@@ -32,7 +32,7 @@ CtmApp *ctm_app_new     (void);
 CtmDB  *ctm_app_get_db  (CtmApp *self);
 
 void    ctm_app_message (GtkWindow      *parent,
-			 const char     *message);
+                         const char     *message);
 
 G_END_DECLS
 

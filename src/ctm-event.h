@@ -30,23 +30,23 @@ CtmEvent    *ctm_event_new         (void);
 
 guint        ctm_event_get_id      (CtmEvent    *self);
 void         ctm_event_set_id      (CtmEvent    *self,
-				    const guint  id);
+                                    const guint  id);
 
 guint        ctm_event_get_task_id (CtmEvent    *self);
 void         ctm_event_set_task_id (CtmEvent    *self,
-				    const guint  task_id);
+                                    const guint  task_id);
 
 GDateTime   *ctm_event_get_when    (CtmEvent    *self);
 void         ctm_event_set_when    (CtmEvent    *self,
-				    GDateTime   *when);
+                                    GDateTime   *when);
 
 gfloat       ctm_event_get_time    (CtmEvent    *self);
 void         ctm_event_set_time    (CtmEvent    *self,
-				    gfloat       time);
+                                    gfloat       time);
 
 const gchar *ctm_event_get_notes   (CtmEvent    *self);
 void         ctm_event_set_notes   (CtmEvent    *self,
-				    const gchar *notes);
+                                    const gchar *notes);
 
 G_END_DECLS
 

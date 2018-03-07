@@ -48,9 +48,9 @@ ctm_person_finalize (GObject *object)
 
 static void
 ctm_person_get_property (GObject    *object,
-												 guint       prop_id,
-												 GValue     *value,
-												 GParamSpec *pspec)
+                         guint       prop_id,
+                         GValue     *value,
+                         GParamSpec *pspec)
 {
   CtmPerson *self = (CtmPerson *)object;
 
@@ -69,9 +69,9 @@ ctm_person_get_property (GObject    *object,
 
 static void
 ctm_person_set_property (GObject      *object,
-												 guint         prop_id,
-												 const GValue *value,
-												 GParamSpec   *pspec)
+                         guint         prop_id,
+                         const GValue *value,
+                         GParamSpec   *pspec)
 {
   CtmPerson *self = (CtmPerson *)object;
 
@@ -102,19 +102,19 @@ ctm_person_class_init (CtmPersonClass *klass)
 
   properties [PROP_ID] =
     g_param_spec_uint ("id",
-											 "ID",
-											 "The internal id of the person",
-											 0,
-											 G_MAXUINT,
-											 0,
-											 G_PARAM_READWRITE);
+                       "ID",
+                       "The internal id of the person",
+                       0,
+                       G_MAXUINT,
+                       0,
+                       G_PARAM_READWRITE);
 
   properties [PROP_NAME] =
     g_param_spec_string ("name",
-												 "Name",
-												 "The name of the person",
-												 NULL,
-												 (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+                         "Name",
+                         "The name of the person",
+                         NULL,
+                         (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_properties (object_class, LAST_PROP, properties);
 
@@ -142,7 +142,7 @@ ctm_person_get_id (CtmPerson *self)
 
 void
 ctm_person_set_id (CtmPerson   *self,
-									 const guint  id)
+                   const guint  id)
 {
   self->id = id;
 }
@@ -155,7 +155,7 @@ ctm_person_get_name (CtmPerson *self)
 
 void
 ctm_person_set_name (CtmPerson   *self,
-										 const gchar *name)
+                     const gchar *name)
 {
   if (g_strcmp0 (name, self->name))
     {

@@ -31,16 +31,16 @@ CtmWindow *ctm_window_new          (CtmApp     *app);
 void       ctm_window_show_myself  (CtmWindow  *self);
 
 void       ctm_window_show_task    (CtmWindow  *self,
-				    CtmTask    *task);
+                                    CtmTask    *task);
 
 void       ctm_window_show_project (CtmWindow  *self,
-				    CtmProject *project);
+                                    CtmProject *project);
 
 void       ctm_window_show_person  (CtmWindow  *self,
-				    CtmPerson  *person);
+                                    CtmPerson  *person);
 
 void       ctm_window_show_event   (CtmWindow  *self,
-				    CtmEvent   *event);
+                                    CtmEvent   *event);
 
 void       ctm_window_go_back      (CtmWindow  *self);
 

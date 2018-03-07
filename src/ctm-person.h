@@ -30,11 +30,11 @@ CtmPerson   *ctm_person_new      (void);
 
 guint        ctm_person_get_id   (CtmPerson   *self);
 void         ctm_person_set_id   (CtmPerson   *self,
-				  const guint  id);
+                                  const guint  id);
 
 const gchar *ctm_person_get_name (CtmPerson   *self);
 void         ctm_person_set_name (CtmPerson   *self,
-				  const gchar *name);
+                                  const gchar *name);
 
 G_END_DECLS
 

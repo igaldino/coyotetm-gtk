@@ -135,7 +135,7 @@ ctm_db_set_filename (CtmDB       *self,
 void
 ctm_db_open (CtmDB *self)
 {
-  GList *object_types;
+  GList *object_types = NULL;
   GError *error = NULL;
 
   self->adapter = gom_adapter_new ();

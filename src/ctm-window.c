@@ -34,8 +34,6 @@ ctm_window_new (CtmApp *app)
 static void
 ctm_window_finalize (GObject *object)
 {
-  CtmWindow *self = (CtmWindow *)object;
-
   G_OBJECT_CLASS (ctm_window_parent_class)->finalize (object);
 }
 

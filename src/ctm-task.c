@@ -357,9 +357,9 @@ void
 ctm_task_set_begin (CtmTask   *self,
                     GDateTime *begin)
 {
-  if (begin && (self->begin &&
-    !g_date_time_equal (begin, self->begin) ||
-    !self->begin))
+  if (begin &&
+      ((self->begin && !g_date_time_equal (begin, self->begin)) ||
+       !self->begin))
     {
       g_clear_pointer (&self->begin, g_date_time_unref);
       self->begin = g_date_time_new_local (g_date_time_get_year (begin),
@@ -379,9 +379,9 @@ void
 ctm_task_set_end (CtmTask   *self,
                   GDateTime *end)
 {
-  if (end && (self->end &&
-              !g_date_time_equal (end, self->end) ||
-              !self->end))
+  if (end &&
+      ((self->end && !g_date_time_equal (end, self->end)) ||
+       !self->end))
     {
       g_clear_pointer (&self->end, g_date_time_unref);
       self->end = g_date_time_new_local (g_date_time_get_year (end),
@@ -401,9 +401,9 @@ void
 ctm_task_set_due (CtmTask   *self,
                   GDateTime *due)
 {
-  if (due && (self->due &&
-              !g_date_time_equal (due, self->due) ||
-              !self->due))
+  if (due &&
+      ((self->due && !g_date_time_equal (due, self->due)) ||
+       !self->due))
     {
       g_clear_pointer (&self->due, g_date_time_unref);
       self->due = g_date_time_new_local (g_date_time_get_year (due),

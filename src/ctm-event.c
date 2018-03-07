@@ -223,9 +223,9 @@ void
 ctm_event_set_when (CtmEvent  *self,
                     GDateTime *when)
 {
-  if (when && (self->when &&
-               !g_date_time_equal (when, self->when) ||
-               !self->when))
+  if (when &&
+      ((self->when && !g_date_time_equal (when, self->when)) ||
+       !self->when))
     {
       g_clear_pointer (&self->when, g_date_time_unref);
       self->when = g_date_time_new_local (g_date_time_get_year (when),

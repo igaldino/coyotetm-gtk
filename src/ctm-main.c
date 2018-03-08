@@ -22,10 +22,7 @@ int
 main (int   argc,
       char *argv[])
 {
-  CtmApp *app = ctm_app_new ();
-  int status = g_application_run (G_APPLICATION (app), argc, argv);
-  g_object_unref (app);
-
-  return status;
+  g_autoptr(CtmApp) app = ctm_app_new ();
+  return g_application_run (G_APPLICATION (app), argc, argv);
 }
 

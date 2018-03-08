@@ -136,7 +136,7 @@ void
 ctm_db_open (CtmDB *self)
 {
   GList *object_types = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   self->adapter = gom_adapter_new ();
   gom_adapter_open_sync (self->adapter, self->filename, &error);
@@ -163,7 +163,7 @@ ctm_db_open (CtmDB *self)
 void
 ctm_db_close (CtmDB *self)
 {
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   if (!self)
     return;
@@ -183,7 +183,7 @@ void
 ctm_db_save (CtmDB       *self,
              GomResource *resource)
 {
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   g_object_set (resource, "repository", self->repository, NULL);
 
@@ -200,10 +200,10 @@ ctm_db_save (CtmDB       *self,
 GArray *
 ctm_db_get_all_people (CtmDB *self)
 {
-  GomResourceGroup *resource_group = NULL;
+  g_autoptr(GomResourceGroup) resource_group = NULL;
   GArray *people = NULL;
   CtmPerson *person = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
   guint count;
 
   resource_group = gom_repository_find_sync (self->repository, CTM_TYPE_PERSON, NULL, &error);
@@ -220,7 +220,6 @@ ctm_db_get_all_people (CtmDB *self)
       if (error != NULL)
         {
           g_warning ("Error fetching all people from db: %s\n", error->message);
-          g_clear_object (&resource_group);
           return NULL;
         }
 
@@ -236,8 +235,6 @@ ctm_db_get_all_people (CtmDB *self)
         }
       }
 
-  g_clear_object (&resource_group);
-
   return people;
 }
 
@@ -246,9 +243,9 @@ ctm_db_get_person_by_id (CtmDB *self,
                          guint  id)
 {
   GValue value = { 0, };
-  GomFilter *filter;
+  g_autoptr(GomFilter) filter = NULL;
   CtmPerson *person = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   g_value_init (&value, G_TYPE_UINT);
   g_value_set_uint (&value, id);
@@ -270,10 +267,10 @@ ctm_db_get_person_by_id (CtmDB *self,
 GArray *
 ctm_db_get_all_projects (CtmDB *self)
 {
-  GomResourceGroup *resource_group = NULL;
+  g_autoptr(GomResourceGroup) resource_group = NULL;
   GArray *projects = NULL;
   CtmProject *project = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
   guint count;
 
   resource_group = gom_repository_find_sync (self->repository, CTM_TYPE_PROJECT, NULL, &error);
@@ -290,7 +287,6 @@ ctm_db_get_all_projects (CtmDB *self)
       if (error != NULL)
         {
           g_warning ("Error fetching all projects from db: %s\n", error->message);
-          g_clear_object (&resource_group);
           return NULL;
         }
 
@@ -306,8 +302,6 @@ ctm_db_get_all_projects (CtmDB *self)
         }
       }
 
-  g_clear_object (&resource_group);
-
   return projects;
 }
 
@@ -316,9 +310,9 @@ ctm_db_get_project_by_id (CtmDB *self,
                           guint  id)
 {
   GValue value = { 0, };
-  GomFilter *filter;
+  g_autoptr(GomFilter) filter = NULL;
   CtmProject *project = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   g_value_init (&value, G_TYPE_UINT);
   g_value_set_uint (&value, id);
@@ -340,10 +334,10 @@ ctm_db_get_project_by_id (CtmDB *self,
 GArray *
 ctm_db_get_all_tasks (CtmDB *self)
 {
-  GomResourceGroup *resource_group = NULL;
+  g_autoptr(GomResourceGroup) resource_group = NULL;
   GArray *tasks = NULL;
   CtmTask *task = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
   guint count;
 
   resource_group = gom_repository_find_sync (self->repository, CTM_TYPE_TASK, NULL, &error);
@@ -360,7 +354,6 @@ ctm_db_get_all_tasks (CtmDB *self)
       if (error != NULL)
         {
           g_warning ("Error fetching all tasks from db: %s\n", error->message);
-          g_clear_object (&resource_group);
           return NULL;
         }
 
@@ -376,8 +369,6 @@ ctm_db_get_all_tasks (CtmDB *self)
         }
       }
 
-  g_clear_object (&resource_group);
-
   return tasks;
 }
 
@@ -386,9 +377,9 @@ ctm_db_get_task_by_id (CtmDB *self,
                        guint  id)
 {
   GValue value = { 0, };
-  GomFilter *filter;
+  g_autoptr(GomFilter) filter = NULL;
   CtmTask *task = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   g_value_init (&value, G_TYPE_UINT);
   g_value_set_uint (&value, id);
@@ -410,10 +401,10 @@ ctm_db_get_task_by_id (CtmDB *self,
 GArray *
 ctm_db_get_all_events (CtmDB *self)
 {
-  GomResourceGroup *resource_group = NULL;
+  g_autoptr(GomResourceGroup) resource_group = NULL;
   GArray *events = NULL;
   CtmEvent *event = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
   guint count;
 
   resource_group = gom_repository_find_sync (self->repository, CTM_TYPE_EVENT, NULL, &error);
@@ -430,7 +421,6 @@ ctm_db_get_all_events (CtmDB *self)
       if (error != NULL)
         {
           g_warning ("Error fetching all events from db: %s\n", error->message);
-          g_clear_object (&resource_group);
           return NULL;
         }
 
@@ -446,8 +436,6 @@ ctm_db_get_all_events (CtmDB *self)
         }
       }
 
-  g_clear_object (&resource_group);
-
   return events;
 }
 
@@ -456,9 +444,9 @@ ctm_db_get_event_by_id (CtmDB *self,
                         guint  id)
 {
   GValue value = { 0, };
-  GomFilter *filter;
+  g_autoptr(GomFilter) filter = NULL;
   CtmEvent *event = NULL;
-  GError *error = NULL;
+  g_autoptr(GError) error = NULL;
 
   g_value_init (&value, G_TYPE_UINT);
   g_value_set_uint (&value, id);

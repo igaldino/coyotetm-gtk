@@ -41,19 +41,19 @@ void         ctm_db_close             (CtmDB       *self);
 void         ctm_db_save              (CtmDB       *self,
                                        GomResource *resource);
 
-GArray      *ctm_db_get_all_people    (CtmDB       *self);
+GPtrArray   *ctm_db_get_all_people    (CtmDB       *self);
 CtmPerson   *ctm_db_get_person_by_id  (CtmDB       *self,
                                        guint        id);
 
-GArray      *ctm_db_get_all_projects  (CtmDB       *self);
+GPtrArray   *ctm_db_get_all_projects  (CtmDB       *self);
 CtmProject  *ctm_db_get_project_by_id (CtmDB       *self,
                                        guint        id);
 
-GArray      *ctm_db_get_all_tasks     (CtmDB       *self);
+GPtrArray   *ctm_db_get_all_tasks     (CtmDB       *self);
 CtmTask     *ctm_db_get_task_by_id    (CtmDB       *self,
                                        guint        id);
 
-GArray      *ctm_db_get_all_events    (CtmDB       *self);
+GPtrArray   *ctm_db_get_all_events    (CtmDB       *self);
 CtmEvent    *ctm_db_get_event_by_id   (CtmDB       *self,
                                        guint        id);
 

@@ -197,11 +197,11 @@ ctm_db_save (CtmDB       *self,
 
 /* Person functions */
 
-GArray *
+GPtrArray *
 ctm_db_get_all_people (CtmDB *self)
 {
   g_autoptr(GomResourceGroup) resource_group = NULL;
-  GArray *people = NULL;
+  GPtrArray *people = NULL;
   CtmPerson *person = NULL;
   g_autoptr(GError) error = NULL;
   guint count;
@@ -223,15 +223,14 @@ ctm_db_get_all_people (CtmDB *self)
           return NULL;
         }
 
-      people = g_array_new (TRUE, TRUE, sizeof (CtmPerson *));
+      people = g_ptr_array_new_with_free_func (g_object_unref);
       for (int index = 0; index < count; index++)
         {
           person = CTM_PERSON (gom_resource_group_get_index (resource_group, index));
 
           /* create a new reference to the person object,
              so it won't get lost when resource group is cleared */
-          person = g_object_ref (person);
-          g_array_append_val (people, person);
+          g_ptr_array_add (people, g_object_ref (person));
         }
       }
 
@@ -264,11 +263,11 @@ ctm_db_get_person_by_id (CtmDB *self,
 
 /* Project functions */
 
-GArray *
+GPtrArray *
 ctm_db_get_all_projects (CtmDB *self)
 {
   g_autoptr(GomResourceGroup) resource_group = NULL;
-  GArray *projects = NULL;
+  GPtrArray *projects = NULL;
   CtmProject *project = NULL;
   g_autoptr(GError) error = NULL;
   guint count;
@@ -290,15 +289,14 @@ ctm_db_get_all_projects (CtmDB *self)
           return NULL;
         }
 
-      projects = g_array_new (TRUE, TRUE, sizeof (CtmProject *));
+      projects = g_ptr_array_new_with_free_func (g_object_unref);
       for (int index = 0; index < count; index++)
         {
           project = CTM_PROJECT (gom_resource_group_get_index (resource_group, index));
 
           /* create a new reference to the project object,
              so it won't get lost when resource group is cleared */
-          project = g_object_ref (project);
-          g_array_append_val (projects, project);
+          g_ptr_array_add (projects, g_object_ref (project));
         }
       }
 
@@ -331,11 +329,11 @@ ctm_db_get_project_by_id (CtmDB *self,
 
 /* Task functions */
 
-GArray *
+GPtrArray *
 ctm_db_get_all_tasks (CtmDB *self)
 {
   g_autoptr(GomResourceGroup) resource_group = NULL;
-  GArray *tasks = NULL;
+  GPtrArray *tasks = NULL;
   CtmTask *task = NULL;
   g_autoptr(GError) error = NULL;
   guint count;
@@ -357,15 +355,14 @@ ctm_db_get_all_tasks (CtmDB *self)
           return NULL;
         }
 
-      tasks = g_array_new (TRUE, TRUE, sizeof (CtmTask *));
+      tasks = g_ptr_array_new_with_free_func (g_object_unref);
       for (int index = 0; index < count; index++)
         {
           task = CTM_TASK (gom_resource_group_get_index (resource_group, index));
 
           /* create a new reference to the task object,
              so it won't get lost when resource group is cleared */
-          task = g_object_ref (task);
-          g_array_append_val (tasks, task);
+          g_ptr_array_add (tasks, g_object_ref (task));
         }
       }
 
@@ -398,11 +395,11 @@ ctm_db_get_task_by_id (CtmDB *self,
 
 /* Event functions */
 
-GArray *
+GPtrArray *
 ctm_db_get_all_events (CtmDB *self)
 {
   g_autoptr(GomResourceGroup) resource_group = NULL;
-  GArray *events = NULL;
+  GPtrArray *events = NULL;
   CtmEvent *event = NULL;
   g_autoptr(GError) error = NULL;
   guint count;
@@ -424,15 +421,14 @@ ctm_db_get_all_events (CtmDB *self)
           return NULL;
         }
 
-      events = g_array_new (TRUE, TRUE, sizeof (CtmEvent *));
+      events = g_ptr_array_new_with_free_func (g_object_unref);
       for (int index = 0; index < count; index++)
         {
           event = CTM_EVENT (gom_resource_group_get_index (resource_group, index));
 
           /* create a new reference to the event object,
              so it won't get lost when resource group is cleared */
-          event = g_object_ref (event);
-          g_array_append_val (events, event);
+          g_ptr_array_add (events, g_object_ref (event));
         }
       }
 

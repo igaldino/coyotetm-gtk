@@ -290,6 +290,33 @@ ctm_db_get_all (CtmDB      *self,
   return array;
 }
 
+GomResource *
+ctm_db_get_by_id (CtmDB      *self,
+                  GType       type,
+                  const char *description,
+                  const char *which,
+                  guint       id)
+{
+  GValue value = { 0, };
+  g_autoptr(GomFilter) filter = NULL;
+  GomResource *data = NULL;
+  g_autoptr(GError) error = NULL;
+
+  g_value_init (&value, G_TYPE_UINT);
+  g_value_set_uint (&value, id);
+  filter = gom_filter_new_eq (type, which, &value);
+  g_value_unset(&value);
+
+  data = gom_repository_find_one_sync(self->repository, type, filter, &error);
+  if (error != NULL && error->code != 3)
+    {
+      g_warning ("Error finding %s #%d: (%d) %s\n", description, id, error->code, error->message);
+      return NULL;
+    }
+
+  return data;
+}
+
 /* Person functions */
 
 GPtrArray *
@@ -302,24 +329,7 @@ CtmPerson *
 ctm_db_get_person_by_id (CtmDB *self,
                          guint  id)
 {
-  GValue value = { 0, };
-  g_autoptr(GomFilter) filter = NULL;
-  CtmPerson *person = NULL;
-  g_autoptr(GError) error = NULL;
-
-  g_value_init (&value, G_TYPE_UINT);
-  g_value_set_uint (&value, id);
-  filter = gom_filter_new_eq (CTM_TYPE_PERSON, "id", &value);
-  g_value_unset(&value);
-
-  person = CTM_PERSON (gom_repository_find_one_sync(self->repository, CTM_TYPE_PERSON, filter, &error));
-  if (error != NULL && error->code != 3)
-    {
-      g_warning ("Error finding person #%d: (%d) %s\n", id, error->code, error->message);
-      return NULL;
-    }
-
-  return person;
+  return CTM_PERSON (ctm_db_get_by_id(self, CTM_TYPE_PERSON, "person", "id", id));
 }
 
 /* Project functions */
@@ -334,24 +344,7 @@ CtmProject *
 ctm_db_get_project_by_id (CtmDB *self,
                           guint  id)
 {
-  GValue value = { 0, };
-  g_autoptr(GomFilter) filter = NULL;
-  CtmProject *project = NULL;
-  g_autoptr(GError) error = NULL;
-
-  g_value_init (&value, G_TYPE_UINT);
-  g_value_set_uint (&value, id);
-  filter = gom_filter_new_eq (CTM_TYPE_PROJECT, "id", &value);
-  g_value_unset(&value);
-
-  project = CTM_PROJECT (gom_repository_find_one_sync(self->repository, CTM_TYPE_PROJECT, filter, &error));
-  if (error != NULL && error->code != 3)
-    {
-      g_warning ("Error finding project #%d: (%d) %s\n", id, error->code, error->message);
-      return NULL;
-    }
-
-  return project;
+  return CTM_PROJECT (ctm_db_get_by_id(self, CTM_TYPE_PROJECT, "project", "id", id));
 }
 
 /* Task functions */
@@ -366,24 +359,7 @@ CtmTask *
 ctm_db_get_task_by_id (CtmDB *self,
                        guint  id)
 {
-  GValue value = { 0, };
-  g_autoptr(GomFilter) filter = NULL;
-  CtmTask *task = NULL;
-  g_autoptr(GError) error = NULL;
-
-  g_value_init (&value, G_TYPE_UINT);
-  g_value_set_uint (&value, id);
-  filter = gom_filter_new_eq (CTM_TYPE_TASK, "id", &value);
-  g_value_unset(&value);
-
-  task = CTM_TASK (gom_repository_find_one_sync(self->repository, CTM_TYPE_TASK, filter, &error));
-  if (error != NULL && error->code != 3)
-    {
-      g_warning ("Error finding task #%d: (%d) %s\n", id, error->code, error->message);
-      return NULL;
-    }
-
-  return task;
+  return CTM_TASK (ctm_db_get_by_id(self, CTM_TYPE_TASK, "task", "id", id));
 }
 
 /* Event functions */
@@ -398,23 +374,6 @@ CtmEvent *
 ctm_db_get_event_by_id (CtmDB *self,
                         guint  id)
 {
-  GValue value = { 0, };
-  g_autoptr(GomFilter) filter = NULL;
-  CtmEvent *event = NULL;
-  g_autoptr(GError) error = NULL;
-
-  g_value_init (&value, G_TYPE_UINT);
-  g_value_set_uint (&value, id);
-  filter = gom_filter_new_eq (CTM_TYPE_EVENT, "id", &value);
-  g_value_unset(&value);
-
-  event = CTM_EVENT (gom_repository_find_one_sync(self->repository, CTM_TYPE_EVENT, filter, &error));
-  if (error != NULL && error->code != 3)
-    {
-      g_warning ("Error finding event #%d: (%d) %s\n", id, error->code, error->message);
-      return NULL;
-    }
-
-  return event;
+  return CTM_EVENT (ctm_db_get_by_id(self, CTM_TYPE_EVENT, "event", "id", id));
 }
 

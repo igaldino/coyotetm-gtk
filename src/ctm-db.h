@@ -46,6 +46,11 @@ void         ctm_db_test              (CtmDB       *self);
 GPtrArray   *ctm_db_get_all           (CtmDB       *self,
                                        GType        type,
                                        const char  *description);
+GomResource *ctm_db_get_by_id         (CtmDB       *self,
+                                       GType        type,
+                                       const char  *description,
+                                       const char  *which,
+                                       guint        id);
 
 GPtrArray   *ctm_db_get_all_people    (CtmDB       *self);
 CtmPerson   *ctm_db_get_person_by_id  (CtmDB       *self,

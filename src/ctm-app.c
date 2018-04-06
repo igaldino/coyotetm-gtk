@@ -33,19 +33,19 @@ struct _CtmApp
 G_DEFINE_TYPE (CtmApp, ctm_app, GTK_TYPE_APPLICATION);
 
 static void
-about_activated (GSimpleAction *action,
-                 GVariant      *parameter,
-                 gpointer       app);
+ctm_app_about (GSimpleAction *action,
+               GVariant      *parameter,
+               gpointer       app);
 
 static void
-quit_activated (GSimpleAction *action,
-                GVariant      *parameter,
-                gpointer       app);
+ctm_app_quit (GSimpleAction *action,
+              GVariant      *parameter,
+              gpointer       app);
 
-static GActionEntry menu_entries[] =
+static GActionEntry ctm_app_menu[] =
 {
-  {"about", about_activated, NULL, NULL, NULL},
-  {"quit", quit_activated, NULL, NULL, NULL}
+  {"about", ctm_app_about, NULL, NULL, NULL},
+  {"quit", ctm_app_quit, NULL, NULL, NULL}
 };
 
 static GOptionEntry ctm_app_options[] =
@@ -55,9 +55,9 @@ static GOptionEntry ctm_app_options[] =
 };
 
 static void
-about_activated (GSimpleAction *action,
-                 GVariant      *parameter,
-                 gpointer       app)
+ctm_app_about (GSimpleAction *action,
+               GVariant      *parameter,
+               gpointer       app)
 {
   GtkWindow *win = gtk_application_get_active_window (GTK_APPLICATION (app));
   const gchar *authors[] = {"Isaque Galdino <igaldino@gmail.com>", NULL};
@@ -76,9 +76,9 @@ about_activated (GSimpleAction *action,
 }
 
 static void
-quit_activated (GSimpleAction *action,
-                GVariant      *parameter,
-                gpointer       app)
+ctm_app_quit (GSimpleAction *action,
+              GVariant      *parameter,
+              gpointer       app)
 {
   g_application_quit (G_APPLICATION (app));
 }
@@ -110,8 +110,8 @@ ctm_app_startup (GApplication *app)
   ctm_db_open (self->db);
 
   g_action_map_add_action_entries (G_ACTION_MAP (app),
-                                   menu_entries,
-                                   G_N_ELEMENTS (menu_entries),
+                                   ctm_app_menu,
+                                   G_N_ELEMENTS (ctm_app_menu),
                                    app);
 
   gtk_application_set_accels_for_action (GTK_APPLICATION (app),

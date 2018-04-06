@@ -43,6 +43,10 @@ void         ctm_db_save              (CtmDB       *self,
 
 void         ctm_db_test              (CtmDB       *self);
 
+GPtrArray   *ctm_db_get_all           (CtmDB       *self,
+                                       GType        type,
+                                       const char  *description);
+
 GPtrArray   *ctm_db_get_all_people    (CtmDB       *self);
 CtmPerson   *ctm_db_get_person_by_id  (CtmDB       *self,
                                        guint        id);

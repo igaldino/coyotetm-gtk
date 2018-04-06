@@ -83,34 +83,34 @@ static GActionEntry menu_entries[] =
 };
 
 static void
-ctm_app_startup (GApplication *self)
+ctm_app_startup (GApplication *app)
 {
   /* GtkBuilder *builder;
   GMenuModel *menu; */
   const gchar *quit_accels[2] = {"<Ctrl>Q", NULL};
-  CtmApp *app = CTM_APP (self);
+  CtmApp *self = CTM_APP (app);
 
-  G_APPLICATION_CLASS (ctm_app_parent_class)->startup (self);
+  G_APPLICATION_CLASS (ctm_app_parent_class)->startup (app);
 
-  app->db = ctm_db_new ();
-  ctm_db_set_filename (app->db,
+  self->db = ctm_db_new ();
+  ctm_db_set_filename (self->db,
                        g_build_filename (g_get_user_data_dir (),
                                          "coyotetm.db",
                                          NULL));
-  ctm_db_open (app->db);
+  ctm_db_open (self->db);
 
-  g_action_map_add_action_entries (G_ACTION_MAP (self),
+  g_action_map_add_action_entries (G_ACTION_MAP (app),
                                    menu_entries,
                                    G_N_ELEMENTS (menu_entries),
-                                   self);
+                                   app);
 
-  gtk_application_set_accels_for_action (GTK_APPLICATION (self),
+  gtk_application_set_accels_for_action (GTK_APPLICATION (app),
                                          "app.quit",
                                          quit_accels);
 
   /* builder = gtk_builder_new_from_resource ("/org/gtk/coyotetm/menu.ui");
   menu = G_MENU_MODEL (gtk_builder_get_object (builder, "menu"));
-  gtk_application_set_app_menu (GTK_APPLICATION (self), menu);
+  gtk_application_set_app_menu (GTK_APPLICATION (app), menu);
   g_object_unref (builder); */
 }
 
@@ -141,14 +141,16 @@ ctm_app_shutdown (GApplication *app)
 }
 
 static void
-ctm_app_activate (GApplication *self)
+ctm_app_activate (GApplication *app)
 {
-  GtkWindow *window = gtk_application_get_active_window (GTK_APPLICATION (self));
-  if (!window)
-    window = GTK_WINDOW (ctm_window_new (CTM_APP (self)));
+  CtmApp *self = CTM_APP (app);
+  GtkWindow *window = gtk_application_get_active_window (GTK_APPLICATION (app));
 
-  if (CTM_APP (self)->run_tests)
-    ctm_db_test (CTM_APP (self)->db);
+  if (!window)
+    window = GTK_WINDOW (ctm_window_new (self));
+
+  if (self->run_tests)
+    ctm_db_test (self->db);
 
   gtk_window_present (window);
 }

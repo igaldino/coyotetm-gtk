@@ -32,20 +32,27 @@ struct _CtmApp
 
 G_DEFINE_TYPE (CtmApp, ctm_app, GTK_TYPE_APPLICATION);
 
+static void
+about_activated (GSimpleAction *action,
+                 GVariant      *parameter,
+                 gpointer       app);
+
+static void
+quit_activated (GSimpleAction *action,
+                GVariant      *parameter,
+                gpointer       app);
+
+static GActionEntry menu_entries[] =
+{
+  {"about", about_activated, NULL, NULL, NULL},
+  {"quit", quit_activated, NULL, NULL, NULL}
+};
+
 static GOptionEntry ctm_app_options[] =
 {
   {"run-tests", 't', 0, G_OPTION_ARG_NONE, NULL, "Run application tests", NULL},
   {NULL}
 };
-
-static void
-ctm_app_init (CtmApp *self)
-{
-  self->db = NULL;
-  self->run_tests = FALSE;
-
-  g_application_add_main_option_entries (G_APPLICATION (self), ctm_app_options);
-}
 
 static void
 about_activated (GSimpleAction *action,
@@ -76,11 +83,14 @@ quit_activated (GSimpleAction *action,
   g_application_quit (G_APPLICATION (app));
 }
 
-static GActionEntry menu_entries[] =
+static void
+ctm_app_init (CtmApp *self)
 {
-  {"about", about_activated, NULL, NULL, NULL},
-  {"quit", quit_activated, NULL, NULL, NULL}
-};
+  self->db = NULL;
+  self->run_tests = FALSE;
+
+  g_application_add_main_option_entries (G_APPLICATION (self), ctm_app_options);
+}
 
 static void
 ctm_app_startup (GApplication *app)

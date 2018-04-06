@@ -27,14 +27,24 @@ struct _CtmApp
 {
   GtkApplication  parent_instance;
   CtmDB          *db;
+  gboolean        run_tests;
 };
 
 G_DEFINE_TYPE (CtmApp, ctm_app, GTK_TYPE_APPLICATION);
+
+static GOptionEntry ctm_app_options[] =
+{
+  {"run-tests", 't', 0, G_OPTION_ARG_NONE, NULL, "Run application tests", NULL},
+  {NULL}
+};
 
 static void
 ctm_app_init (CtmApp *self)
 {
   self->db = NULL;
+  self->run_tests = FALSE;
+
+  g_application_add_main_option_entries (G_APPLICATION (self), ctm_app_options);
 }
 
 static void
@@ -104,6 +114,21 @@ ctm_app_startup (GApplication *self)
   g_object_unref (builder); */
 }
 
+static gint
+ctm_app_command_line (GApplication            *app,
+                      GApplicationCommandLine *command_line)
+{
+  CtmApp *self = CTM_APP (app);
+  GVariantDict *options = g_application_command_line_get_options_dict (command_line);
+
+  if (g_variant_dict_contains (options, "run-tests"))
+    self->run_tests = TRUE;
+
+  g_application_activate (app);
+
+  return 0;
+}
+
 static void
 ctm_app_shutdown (GApplication *app)
 {
@@ -121,6 +146,10 @@ ctm_app_activate (GApplication *self)
   GtkWindow *window = gtk_application_get_active_window (GTK_APPLICATION (self));
   if (!window)
     window = GTK_WINDOW (ctm_window_new (CTM_APP (self)));
+
+  if (CTM_APP (self)->run_tests)
+    ctm_db_test (CTM_APP (self)->db);
+
   gtk_window_present (window);
 }
 
@@ -128,6 +157,7 @@ static void
 ctm_app_class_init (CtmAppClass *class)
 {
   G_APPLICATION_CLASS (class)->startup = ctm_app_startup;
+  G_APPLICATION_CLASS (class)->command_line = ctm_app_command_line;
   G_APPLICATION_CLASS (class)->activate = ctm_app_activate;
   G_APPLICATION_CLASS (class)->shutdown = ctm_app_shutdown;
 }
@@ -135,7 +165,10 @@ ctm_app_class_init (CtmAppClass *class)
 CtmApp *
 ctm_app_new (void)
 {
-  return g_object_new (CTM_TYPE_APP, "application-id", "org.gtk.coyotetm", NULL);
+  return g_object_new (CTM_TYPE_APP,
+                       "application-id", "org.gtk.coyotetm",
+                       "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
+                       NULL);
 }
 
 CtmDB *

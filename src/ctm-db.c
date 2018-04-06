@@ -195,6 +195,56 @@ ctm_db_save (CtmDB       *self,
     }
 }
 
+void
+ctm_db_test (CtmDB *self)
+{
+  g_autoptr(GPtrArray) people = NULL;
+  g_autoptr(GPtrArray) projects = NULL;
+  CtmPerson *person = NULL;
+  CtmProject *project = NULL;
+
+  /* create data */
+  person = ctm_person_new ();
+  ctm_person_set_name (person, "One Person");
+  ctm_db_save (self, GOM_RESOURCE(person));
+  g_clear_object (&person);
+
+  project = ctm_project_new ();
+  ctm_project_set_name (project, "project1");
+  ctm_project_set_description (project, "Project One");
+  ctm_db_save (self, GOM_RESOURCE(project));
+  g_clear_object (&project);
+
+  project = ctm_project_new ();
+  ctm_project_set_name (project, "project2");
+  ctm_project_set_description (project, "Project Two");
+  ctm_db_save (self, GOM_RESOURCE(project));
+  g_clear_object (&project);
+
+  /* list data */
+  people = ctm_db_get_all_people (self);
+  if (people)
+    {
+      for (int index = 0; index < people->len; index++)
+        {
+          person = g_ptr_array_index (people, index);
+          g_print ("%d\t%s\n", ctm_person_get_id (person), ctm_person_get_name (person));
+        }
+      g_ptr_array_free (people, TRUE);
+    }
+
+  projects = ctm_db_get_all_projects (self);
+  if (projects)
+    {
+      for (int index = 0; index < projects->len; index++)
+        {
+          project = g_ptr_array_index (projects, index);
+          g_print ("%d\t%s\t%s\n", ctm_project_get_id (project), ctm_project_get_name (project), ctm_project_get_description (project));
+        }
+      g_ptr_array_free (projects, TRUE);
+    }
+}
+
 /* Person functions */
 
 GPtrArray *

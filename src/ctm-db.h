@@ -41,6 +41,8 @@ void         ctm_db_close             (CtmDB       *self);
 void         ctm_db_save              (CtmDB       *self,
                                        GomResource *resource);
 
+void         ctm_db_test              (CtmDB       *self);
+
 GPtrArray   *ctm_db_get_all_people    (CtmDB       *self);
 CtmPerson   *ctm_db_get_person_by_id  (CtmDB       *self,
                                        guint        id);

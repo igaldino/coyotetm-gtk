@@ -1,180 +1,196 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.22.1 -->
 <interface domain="coyotetm">
-  <!-- interface-requires gtk+ 3.8 -->
+  <requires lib="gtk+" version="3.20"/>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">edit-find-symbolic</property>
+  </object>
+  <object class="GtkPopover" id="popover1">
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkModelButton">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="action_name">app.about</property>
+            <property name="text" translatable="yes">About Coyote Task Manager</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <template class="CtmWindow" parent="GtkApplicationWindow">
+    <property name="can_focus">False</property>
     <property name="default_width">640</property>
     <property name="default_height">480</property>
+    <property name="show_menubar">False</property>
     <child type="titlebar">
-      <object class="GtkHeaderBar" id="header_bar">
-        <property name="visible">1</property>
-        <property name="show-close-button">1</property>
+      <object class="GtkStack">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <child>
-          <object class="GtkStack" id="header_start_stack">
-            <property name="visible">1</property>
-            <property name="hhomogeneous">0</property>
+          <object class="GtkHeaderBar" id="main_header">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="title" translatable="yes">Coyote</property>
+            <property name="subtitle" translatable="yes">Task Manager</property>
+            <property name="show_close_button">True</property>
             <child>
-              <object class="GtkButton" id="new_task_button">
-                <property name="visible">1</property>
-                <property name="use-underline">1</property>
-                <property name="label" translatable="yes">_New Task</property>
+              <object class="GtkButton">
+                <property name="label" translatable="yes">_New</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_underline">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="popover">popover1</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="icon_name">open-menu-symbolic</property>
+                  </object>
+                </child>
               </object>
               <packing>
-                <property name="name">main</property>
+                <property name="pack_type">end</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
               <object class="GtkButton">
-                <property name="visible">1</property>
-                <style>
-                  <class name="image-button"/>
-                </style>
-                <accelerator key="Left" modifiers="GDK_MOD1_MASK" signal="activate"/>
-                <child internal-child="accessible">
-                  <object class="AtkObject">
-                    <property name="accessible-name" translatable="yes">Go back</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">go-previous-symbolic</property>
-                    <property name="icon-size">1</property>
-                  </object>
-                </child>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="image">image1</property>
               </object>
               <packing>
-                <property name="name">back</property>
-              </packing>
-            </child>
-          </object>
-        </child>
-        <child type="title">
-          <object class="GtkStack" id="header_title_stack">
-            <property name="visible">1</property>
-            <property name="hhomogeneous">0</property>
-            <child>
-              <object class="GtkStackSwitcher">
-                <property name="visible">1</property>
-                <property name="stack">main_stack</property>
-              </object>
-              <packing>
-                <property name="name">main</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" bind-source="header_bar" bind-property="title"/>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
-              </object>
-              <packing>
-                <property name="name">title</property>
-              </packing>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkStack" id="header_end_stack">
-            <property name="visible">1</property>
-            <property name="hhomogeneous">0</property>
-            <child>
-              <object class="GtkToggleButton" id="search_button">
-                <property name="visible">1</property>
-                <style>
-                  <class name="image-button"/>
-                </style>
-                <child internal-child="accessible">
-                  <object class="AtkObject">
-                    <property name="accessible-name" translatable="yes">Search</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">edit-find-symbolic</property>
-                    <property name="icon-size">1</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="name">search</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton">
-                <property name="visible">1</property>
-                <property name="use-underline">1</property>
-                <property name="label" translatable="yes">_Save</property>
-                <style>
-                  <class name="suggested-action"/>
-                </style>
-              </object>
-              <packing>
-                <property name="name">edit</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkEventBox">
-                <property name="visible">1</property>
-              </object>
-              <packing>
-                <property name="name">list</property>
+                <property name="pack_type">end</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
           <packing>
-            <property name="pack-type">end</property>
+            <property name="name">page0</property>
+            <property name="title" translatable="yes">page0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHeaderBar" id="content_header">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="show_close_button">True</property>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="name">page1</property>
+            <property name="title" translatable="yes">page1</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>
     </child>
     <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="orientation">vertical</property>
+      <object class="GtkPaned">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
         <child>
-          <object class="GtkLabel" id="search_bar">
-            <property name="visible">1</property>
-            <!--property name="search-mode-enabled" bind-source="search_button" bind-property="active" bind-flags="bidirectional"/-->
+          <object class="GtkStackSidebar">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stack">main_stack</property>
           </object>
+          <packing>
+            <property name="resize">False</property>
+            <property name="shrink">True</property>
+          </packing>
         </child>
         <child>
           <object class="GtkStack" id="main_stack">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
-              <object class="GtkLabel" id="tasks_page"/>
+              <object class="GtkTreeView" id="tasks_list">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection"/>
+                </child>
+              </object>
               <packing>
-                <property name="name">tasks</property>
+                <property name="name">page0</property>
                 <property name="title" translatable="yes">Tasks</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="projects_page"/>
+              <object class="GtkTreeView" id="projects_list">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection"/>
+                </child>
+              </object>
               <packing>
-                <property name="name">projecs</property>
+                <property name="name">page1</property>
                 <property name="title" translatable="yes">Projects</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="people_page"/>
+              <object class="GtkTreeView" id="people_list">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection"/>
+                </child>
+              </object>
               <packing>
-                <property name="name">people</property>
+                <property name="name">page2</property>
                 <property name="title" translatable="yes">People</property>
+                <property name="position">2</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="history_page"/>
+              <object class="GtkTreeView" id="events_list">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection"/>
+                </child>
+              </object>
               <packing>
-                <property name="name">history</property>
-                <property name="title" translatable="yes">History</property>
+                <property name="name">page3</property>
+                <property name="title" translatable="yes">Events</property>
+                <property name="position">3</property>
               </packing>
             </child>
           </object>
+          <packing>
+            <property name="resize">True</property>
+            <property name="shrink">True</property>
+          </packing>
         </child>
       </object>
     </child>
   </template>
 </interface>
-

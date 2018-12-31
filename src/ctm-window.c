@@ -21,6 +21,10 @@
 struct _CtmWindow
 {
   GtkApplicationWindow  parent_instance;
+  GtkTreeView          *tasks_list;
+  GtkTreeView          *projects_list;
+  GtkTreeView          *people_list;
+  GtkTreeView          *events_list;
 };
 
 G_DEFINE_TYPE (CtmWindow, ctm_window, GTK_TYPE_APPLICATION_WINDOW)

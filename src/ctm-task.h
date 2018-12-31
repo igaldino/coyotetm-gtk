@@ -22,51 +22,71 @@
 
 G_BEGIN_DECLS
 
+typedef enum
+{
+  CTM_TASK_STATUS_NOT_STARTED,
+  CTM_TASK_STATUS_IN_PROGRESS,
+  CTM_TASK_STATUS_COMPLETED,
+  CTM_TASK_STATUS_CANCELED,
+  CTM_TASK_STATUS_ON_HOLD,
+  CTM_TASK_STATUS_NOO
+} CtmTaskStatusType;
+
+typedef enum
+{
+  CTM_TASK_PRIORITY_CRITICAL,
+  CTM_TASK_PRIORITY_HIGH,
+  CTM_TASK_PRIORITY_MEDIUM,
+  CTM_TASK_PRIORITY_LOW,
+  CTM_TASK_PRIORITY_NONE,
+  CTM_TASK_PRIORITY_NOO
+} CtmTaskPriorityType;
+
 #define CTM_TYPE_TASK (ctm_task_get_type())
 
 G_DECLARE_FINAL_TYPE (CtmTask, ctm_task, CTM, TASK, GomResource)
 
 CtmTask     *ctm_task_new             (void);
 
-guint        ctm_task_get_id          (CtmTask     *self);
-void         ctm_task_set_id          (CtmTask     *self,
-                                       const guint  id);
+guint        ctm_task_get_id          (CtmTask             *self);
+void         ctm_task_set_id          (CtmTask             *self,
+                                       const guint          id);
 
-guint        ctm_task_get_person_id   (CtmTask     *self);
-void         ctm_task_set_person_id   (CtmTask     *self,
-                                       const guint  person_id);
+guint        ctm_task_get_person_id   (CtmTask             *self);
+void         ctm_task_set_person_id   (CtmTask             *self,
+                                       const guint          person_id);
 
-guint        ctm_task_get_project_id  (CtmTask     *self);
-void         ctm_task_set_project_id  (CtmTask     *self,
-                                       const guint  project_id);
+guint        ctm_task_get_project_id  (CtmTask             *self);
+void         ctm_task_set_project_id  (CtmTask             *self,
+                                       const guint          project_id);
 
-const gchar *ctm_task_get_description (CtmTask     *self);
-void         ctm_task_set_description (CtmTask     *self,
-                                       const gchar *description);
+const gchar *ctm_task_get_description (CtmTask             *self);
+void         ctm_task_set_description (CtmTask             *self,
+                                       const gchar         *description);
 
-const gchar *ctm_task_get_notes       (CtmTask     *self);
-void         ctm_task_set_notes       (CtmTask     *self,
-                                       const gchar *notes);
+const gchar *ctm_task_get_notes       (CtmTask             *self);
+void         ctm_task_set_notes       (CtmTask             *self,
+                                       const gchar         *notes);
 
-GDateTime   *ctm_task_get_begin       (CtmTask     *self);
-void         ctm_task_set_begin       (CtmTask     *self,
-                                       GDateTime   *begin);
+GDateTime   *ctm_task_get_begin       (CtmTask             *self);
+void         ctm_task_set_begin       (CtmTask             *self,
+                                       GDateTime           *begin);
 
-GDateTime   *ctm_task_get_end         (CtmTask     *self);
-void         ctm_task_set_end         (CtmTask     *self,
-                                       GDateTime   *end);
+GDateTime   *ctm_task_get_end         (CtmTask             *self);
+void         ctm_task_set_end         (CtmTask             *self,
+                                       GDateTime           *end);
 
-GDateTime   *ctm_task_get_due         (CtmTask     *self);
-void         ctm_task_set_due         (CtmTask     *self,
-                                       GDateTime   *due);
+GDateTime   *ctm_task_get_due         (CtmTask             *self);
+void         ctm_task_set_due         (CtmTask             *self,
+                                       GDateTime           *due);
 
-guint        ctm_task_get_status      (CtmTask     *self);
-void         ctm_task_set_status      (CtmTask     *self,
-                                       const guint  status);
+guint        ctm_task_get_status      (CtmTask             *self);
+void         ctm_task_set_status      (CtmTask             *self,
+                                       CtmTaskStatusType    status);
 
-guint        ctm_task_get_priority    (CtmTask     *self);
-void         ctm_task_set_priority    (CtmTask     *self,
-                                       const guint  priority);
+guint        ctm_task_get_priority    (CtmTask             *self);
+void         ctm_task_set_priority    (CtmTask             *self,
+                                       CtmTaskPriorityType  priority);
 
 G_END_DECLS
 

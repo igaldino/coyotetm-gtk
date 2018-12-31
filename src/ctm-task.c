@@ -413,28 +413,28 @@ ctm_task_set_due (CtmTask   *self,
     }
 }
 
-guint
+CtmTaskStatusType
 ctm_task_get_status (CtmTask *self)
 {
   return self->status;
 }
 
 void
-ctm_task_set_status (CtmTask     *self,
-                     const guint  status)
+ctm_task_set_status (CtmTask           *self,
+                     CtmTaskStatusType  status)
 {
   self->status = status;
 }
 
-guint
+CtmTaskPriorityType
 ctm_task_get_priority (CtmTask *self)
 {
   return self->priority;
 }
 
 void
-ctm_task_set_priority (CtmTask     *self,
-                       const guint  priority)
+ctm_task_set_priority (CtmTask             *self,
+                       CtmTaskPriorityType  priority)
 {
   self->priority = priority;
 }

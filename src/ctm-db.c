@@ -198,7 +198,7 @@ ctm_db_save (CtmDB       *self,
 void
 ctm_db_test (CtmDB *self)
 {
-  g_autoptr(GPtrArray) data = NULL;
+  GPtrArray *data = NULL;
   CtmPerson *person = NULL;
   CtmProject *project = NULL;
 

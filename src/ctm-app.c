@@ -63,7 +63,7 @@ ctm_app_about (GSimpleAction *action,
   const gchar *authors[] = {"Isaque Galdino <igaldino@gmail.com>", NULL};
 
   gtk_show_about_dialog (GTK_WINDOW (win),
-                         "program-name", "CoyoteTM",
+                         "program-name", "Coyote Task Manager",
                          "version", PACKAGE_VERSION,
                          "copyright", "(C) 2000-2017 Isaque Galdino",
                          "license-type", GTK_LICENSE_GPL_3_0,

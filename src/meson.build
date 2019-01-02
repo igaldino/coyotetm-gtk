@@ -1,6 +1,7 @@
 sources = files(
   'ctm-app.c',
   'ctm-db.c',
+  'ctm-model.c',
   'ctm-person.c',
   'ctm-project.c',
   'ctm-task.c',

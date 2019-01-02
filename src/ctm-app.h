@@ -23,16 +23,17 @@
 
 G_BEGIN_DECLS
 
-#define CTM_TYPE_APP (ctm_app_get_type ())
+#define CTM_TYPE_APP    (ctm_app_get_type ())
+#define CTM_APP_DEFAULT (CTM_APP (g_application_get_default()))
 
 G_DECLARE_FINAL_TYPE (CtmApp, ctm_app, CTM, APP, GtkApplication)
 
 CtmApp *ctm_app_new     (void);
 
-CtmDB  *ctm_app_get_db  (CtmApp *self);
+CtmDB  *ctm_app_get_db  (CtmApp     *self);
 
-void    ctm_app_message (GtkWindow      *parent,
-                         const char     *message);
+void    ctm_app_message (GtkWindow  *parent,
+                         const char *message);
 
 G_END_DECLS
 

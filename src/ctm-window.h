@@ -19,6 +19,7 @@
 #pragma once
 
 #include "ctm-app.h"
+#include "ctm-model.h"
 
 G_BEGIN_DECLS
 

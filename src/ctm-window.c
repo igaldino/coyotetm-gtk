@@ -17,6 +17,7 @@
  */
 
 #include "ctm-window.h"
+#include "ctm-model.h"
 
 struct _CtmWindow
 {
@@ -25,6 +26,7 @@ struct _CtmWindow
   GtkTreeView          *projects_list;
   GtkTreeView          *people_list;
   GtkTreeView          *events_list;
+  CtmModel             *model;
 };
 
 G_DEFINE_TYPE (CtmWindow, ctm_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -38,23 +40,66 @@ ctm_window_new (CtmApp *app)
 static void
 ctm_window_finalize (GObject *object)
 {
+  CtmWindow *self = CTM_WINDOW (object);
+
+  g_clear_object (&self->model);
+
   G_OBJECT_CLASS (ctm_window_parent_class)->finalize (object);
 }
 
 static void
 ctm_window_class_init (CtmWindowClass *klass)
 {
-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  GObjectClass   *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->finalize = ctm_window_finalize;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/CoyoteTM/ctm-window.ui");
+  gtk_widget_class_bind_template_child (widget_class, CtmWindow, tasks_list);
+  gtk_widget_class_bind_template_child (widget_class, CtmWindow, projects_list);
+  gtk_widget_class_bind_template_child (widget_class, CtmWindow, people_list);
+  gtk_widget_class_bind_template_child (widget_class, CtmWindow, events_list);
 }
 
 static void
 ctm_window_init (CtmWindow *self)
 {
+  GtkCellRenderer   *renderer;
+  GtkTreeViewColumn *column;
+
   gtk_widget_init_template (GTK_WIDGET (self));
+  self->model = ctm_model_new ();
+
+  /* people list */
+  gtk_tree_view_set_model (self->people_list, ctm_model_get_all_people (self->model));
+
+  renderer = gtk_cell_renderer_text_new ();
+  column = gtk_tree_view_column_new_with_attributes ("ID", renderer, "text", CTM_MODEL_PERSON_COLUMN_ID, NULL);
+  gtk_tree_view_column_set_sort_column_id (column, CTM_MODEL_PERSON_COLUMN_ID);
+  gtk_tree_view_append_column (self->people_list, column);
+
+  renderer = gtk_cell_renderer_text_new ();
+  column = gtk_tree_view_column_new_with_attributes ("Name", renderer, "text", CTM_MODEL_PERSON_COLUMN_NAME, NULL);
+  gtk_tree_view_column_set_sort_column_id (column, CTM_MODEL_PERSON_COLUMN_NAME);
+  gtk_tree_view_append_column (self->people_list, column);
+
+  /* project list */
+  gtk_tree_view_set_model (self->projects_list, ctm_model_get_all_projects (self->model));
+
+  renderer = gtk_cell_renderer_text_new ();
+  column = gtk_tree_view_column_new_with_attributes ("ID", renderer, "text", CTM_MODEL_PROJECT_COLUMN_ID, NULL);
+  gtk_tree_view_column_set_sort_column_id (column, CTM_MODEL_PROJECT_COLUMN_ID);
+  gtk_tree_view_append_column (self->projects_list, column);
+
+  renderer = gtk_cell_renderer_text_new ();
+  column = gtk_tree_view_column_new_with_attributes ("Name", renderer, "text", CTM_MODEL_PROJECT_COLUMN_NAME, NULL);
+  gtk_tree_view_column_set_sort_column_id (column, CTM_MODEL_PROJECT_COLUMN_NAME);
+  gtk_tree_view_append_column (self->projects_list, column);
+
+  renderer = gtk_cell_renderer_text_new ();
+  column = gtk_tree_view_column_new_with_attributes ("Description", renderer, "text", CTM_MODEL_PROJECT_COLUMN_DESCRIPTION, NULL);
+  gtk_tree_view_column_set_sort_column_id (column, CTM_MODEL_PROJECT_COLUMN_DESCRIPTION);
+  gtk_tree_view_append_column (self->projects_list, column);
 }
 

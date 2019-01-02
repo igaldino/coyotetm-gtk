@@ -38,7 +38,10 @@ void         ctm_db_set_filename      (CtmDB       *self,
 void         ctm_db_open              (CtmDB       *self);
 void         ctm_db_close             (CtmDB       *self);
 
-void         ctm_db_save              (CtmDB       *self,
+int          ctm_db_save              (CtmDB       *self,
+                                       GomResource *resource);
+
+int          ctm_db_delete            (CtmDB       *self,
                                        GomResource *resource);
 
 void         ctm_db_test              (CtmDB       *self);

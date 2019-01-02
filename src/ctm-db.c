@@ -179,7 +179,7 @@ ctm_db_close (CtmDB *self)
   g_clear_object (&self->adapter);
 }
 
-void
+int
 ctm_db_save (CtmDB       *self,
              GomResource *resource)
 {
@@ -191,8 +191,26 @@ ctm_db_save (CtmDB       *self,
   if (error != NULL)
     {
       g_warning ("Error saving database table in %s: (%d) %s\n", self->filename, error->code, error->message);
-      return;
+      return FALSE;
     }
+  return TRUE;
+}
+
+int
+ctm_db_delete (CtmDB       *self,
+               GomResource *resource)
+{
+  g_autoptr(GError) error = NULL;
+
+  g_object_set (resource, "repository", self->repository, NULL);
+
+  gom_resource_delete_sync(resource, &error);
+  if (error != NULL)
+    {
+      g_warning ("Error deleting database table in %s: (%d) %s\n", self->filename, error->code, error->message);
+      return FALSE;
+    }
+  return TRUE;
 }
 
 void
@@ -201,6 +219,28 @@ ctm_db_test (CtmDB *self)
   GPtrArray *data = NULL;
   CtmPerson *person = NULL;
   CtmProject *project = NULL;
+  int index;
+
+  /* clean data */
+  data = ctm_db_get_all_people (self);
+  if (data)
+    {
+      for (index = 0; index < data->len; index++)
+        {
+          ctm_db_delete (self, GOM_RESOURCE (g_ptr_array_index (data, index)));
+        }
+      g_ptr_array_free (data, TRUE);
+    }
+
+  data = ctm_db_get_all_projects (self);
+  if (data)
+    {
+      for (index = 0; index < data->len; index++)
+        {
+          ctm_db_delete (self, GOM_RESOURCE (g_ptr_array_index (data, index)));
+        }
+      g_ptr_array_free (data, TRUE);
+    }
 
   /* create data */
   person = ctm_person_new ();
@@ -224,7 +264,7 @@ ctm_db_test (CtmDB *self)
   data = ctm_db_get_all_people (self);
   if (data)
     {
-      for (int index = 0; index < data->len; index++)
+      for (index = 0; index < data->len; index++)
         {
           person = CTM_PERSON (g_ptr_array_index (data, index));
           g_print ("%d\t%s\n", ctm_person_get_id (person),
@@ -236,7 +276,7 @@ ctm_db_test (CtmDB *self)
   data = ctm_db_get_all_projects (self);
   if (data)
     {
-      for (int index = 0; index < data->len; index++)
+      for (index = 0; index < data->len; index++)
         {
           project = CTM_PROJECT (g_ptr_array_index (data, index));
           g_print ("%d\t%s\t%s\n", ctm_project_get_id (project),

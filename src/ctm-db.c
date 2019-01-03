@@ -219,46 +219,61 @@ ctm_db_test (CtmDB *self)
   GPtrArray *data = NULL;
   CtmPerson *person = NULL;
   CtmProject *project = NULL;
-  int index;
-
-  /* clean data */
-  data = ctm_db_get_all_people (self);
-  if (data)
-    {
-      for (index = 0; index < data->len; index++)
-        {
-          ctm_db_delete (self, GOM_RESOURCE (g_ptr_array_index (data, index)));
-        }
-      g_ptr_array_free (data, TRUE);
-    }
-
-  data = ctm_db_get_all_projects (self);
-  if (data)
-    {
-      for (index = 0; index < data->len; index++)
-        {
-          ctm_db_delete (self, GOM_RESOURCE (g_ptr_array_index (data, index)));
-        }
-      g_ptr_array_free (data, TRUE);
-    }
+  CtmTask *task = NULL;
+  CtmEvent *event = NULL;
+  char *description = NULL;
+  int index, index2, index_person, index_project, index_task;
 
   /* create data */
+  index_person = 1;
   person = ctm_person_new ();
+  ctm_person_set_id (person, index_person++);
   ctm_person_set_name (person, "One Person");
   ctm_db_save (self, GOM_RESOURCE(person));
   g_clear_object (&person);
 
+  index_project = 1;
   project = ctm_project_new ();
+  ctm_project_set_id (project, index_project++);
   ctm_project_set_name (project, "project1");
   ctm_project_set_description (project, "Project One");
   ctm_db_save (self, GOM_RESOURCE(project));
   g_clear_object (&project);
 
   project = ctm_project_new ();
+  ctm_project_set_id (project, index_project++);
   ctm_project_set_name (project, "project2");
   ctm_project_set_description (project, "Project Two");
   ctm_db_save (self, GOM_RESOURCE(project));
   g_clear_object (&project);
+
+  for (index_task = 1, index = 1; index < index_person; index++)
+    {
+      for (index2 = 1; index2 < index_project; index2++, index_task++)
+        {
+          task = ctm_task_new ();
+          description = g_strdup_printf ("T%02dP%02dP%02d", index_task, index, index2);
+          ctm_task_set_id (task, index_task);
+          ctm_task_set_person_id (task, index);
+          ctm_task_set_project_id (task, index2);
+          ctm_task_set_description (task, description);
+          ctm_db_save (self, GOM_RESOURCE(task));
+          g_clear_pointer (&description, g_free);
+          g_clear_object (&task);
+        }
+    }
+
+  for (index = 1; index < index_task; index++)
+    {
+      event = ctm_event_new ();
+      description = g_strdup_printf ("E%02dT%02d", index, index);
+      ctm_event_set_id (event, index);
+      ctm_event_set_task_id (event, index);
+      ctm_event_set_notes (event, description);
+      ctm_db_save (self, GOM_RESOURCE(event));
+      g_clear_pointer (&description, g_free);
+      g_clear_object (&event);
+    }
 
   /* list data */
   data = ctm_db_get_all_people (self);
@@ -267,7 +282,8 @@ ctm_db_test (CtmDB *self)
       for (index = 0; index < data->len; index++)
         {
           person = CTM_PERSON (g_ptr_array_index (data, index));
-          g_print ("%d\t%s\n", ctm_person_get_id (person),
+          g_print ("%d\t%s\n",
+                   ctm_person_get_id (person),
                    ctm_person_get_name (person));
         }
       g_ptr_array_free (data, TRUE);
@@ -279,8 +295,36 @@ ctm_db_test (CtmDB *self)
       for (index = 0; index < data->len; index++)
         {
           project = CTM_PROJECT (g_ptr_array_index (data, index));
-          g_print ("%d\t%s\t%s\n", ctm_project_get_id (project),
-                   ctm_project_get_name (project), ctm_project_get_description (project));
+          g_print ("%d\t%s\t%s\n",
+                   ctm_project_get_id (project),
+                   ctm_project_get_name (project),
+                   ctm_project_get_description (project));
+        }
+      g_ptr_array_free (data, TRUE);
+    }
+
+  data = ctm_db_get_all_tasks (self);
+  if (data)
+    {
+      for (index = 0; index < data->len; index++)
+        {
+          task = CTM_TASK (g_ptr_array_index (data, index));
+          g_print ("%d\t%s\n",
+                   ctm_task_get_id (task),
+                   ctm_task_get_description (task));
+        }
+      g_ptr_array_free (data, TRUE);
+    }
+
+  data = ctm_db_get_all_events (self);
+  if (data)
+    {
+      for (index = 0; index < data->len; index++)
+        {
+          event = CTM_EVENT (g_ptr_array_index (data, index));
+          g_print ("%d\t%s\n",
+                   ctm_event_get_id (event),
+                   ctm_event_get_notes (event));
         }
       g_ptr_array_free (data, TRUE);
     }

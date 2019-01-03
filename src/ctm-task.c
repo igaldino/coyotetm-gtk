@@ -316,6 +316,8 @@ ctm_task_set_project_id (CtmTask    *self,
 const gchar *
 ctm_task_get_description (CtmTask *self)
 {
+  g_return_val_if_fail (self, NULL);
+
   return self->description;
 }
 

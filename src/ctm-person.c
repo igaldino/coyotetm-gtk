@@ -150,6 +150,8 @@ ctm_person_set_id (CtmPerson   *self,
 const gchar *
 ctm_person_get_name (CtmPerson *self)
 {
+  g_return_val_if_fail (self, NULL);
+
   return self->name;
 }
 

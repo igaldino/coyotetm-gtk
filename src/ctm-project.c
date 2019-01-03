@@ -167,6 +167,8 @@ ctm_project_set_id (CtmProject  *self,
 const gchar *
 ctm_project_get_name (CtmProject *self)
 {
+  g_return_val_if_fail (self, NULL);
+
   return self->name;
 }
 

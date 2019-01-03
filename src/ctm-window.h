@@ -23,27 +23,30 @@
 
 G_BEGIN_DECLS
 
+typedef enum
+{
+  CTM_WINDOW_PANEL_MAIN,
+  CTM_WINDOW_PANEL_PERSON,
+  CTM_WINDOW_PANEL_PROJECT,
+  CTM_WINDOW_PANEL_TASK,
+  CTM_WINDOW_PANEL_EVENT,
+  CTM_WINDOW_PANEL_NOO
+} CtmWindowPanelType;
+
+typedef enum
+{
+  CTM_WINDOW_LIST_PERSON,
+  CTM_WINDOW_LIST_PROJECT,
+  CTM_WINDOW_LIST_TASK,
+  CTM_WINDOW_LIST_EVENT,
+  CTM_WINDOW_LIST_NOO
+} CtmWindowListType;
+
 #define CTM_TYPE_WINDOW (ctm_window_get_type())
 
 G_DECLARE_FINAL_TYPE (CtmWindow, ctm_window, CTM, WINDOW, GtkApplicationWindow)
 
 CtmWindow *ctm_window_new          (CtmApp     *app);
-
-void       ctm_window_show_myself  (CtmWindow  *self);
-
-void       ctm_window_show_task    (CtmWindow  *self,
-                                    CtmTask    *task);
-
-void       ctm_window_show_project (CtmWindow  *self,
-                                    CtmProject *project);
-
-void       ctm_window_show_person  (CtmWindow  *self,
-                                    CtmPerson  *person);
-
-void       ctm_window_show_event   (CtmWindow  *self,
-                                    CtmEvent   *event);
-
-void       ctm_window_go_back      (CtmWindow  *self);
 
 G_END_DECLS
 

@@ -45,7 +45,9 @@ typedef enum
 {
   CTM_MODEL_TASK_COLUMN_ID,
   CTM_MODEL_TASK_COLUMN_PERSON_ID,
+  CTM_MODEL_TASK_COLUMN_PERSON_NAME,
   CTM_MODEL_TASK_COLUMN_PROJECT_ID,
+  CTM_MODEL_TASK_COLUMN_PROJECT_NAME,
   CTM_MODEL_TASK_COLUMN_DESCRIPTION,
   CTM_MODEL_TASK_COLUMN_NOTES,
   CTM_MODEL_TASK_COLUMN_BEGIN,
@@ -60,6 +62,7 @@ typedef enum
 {
   CTM_MODEL_EVENT_COLUMN_ID,
   CTM_MODEL_EVENT_COLUMN_TASK_ID,
+  CTM_MODEL_EVENT_COLUMN_TASK_DESCRIPTION,
   CTM_MODEL_EVENT_COLUMN_WHEN,
   CTM_MODEL_EVENT_COLUMN_TIME,
   CTM_MODEL_EVENT_COLUMN_NOTES,
@@ -72,9 +75,18 @@ G_DECLARE_FINAL_TYPE (CtmModel, ctm_model, CTM, MODEL, GObject)
 
 CtmModel *ctm_model_new (void);
 
-GtkTreeModel *ctm_model_get_all_people   (CtmModel *self);
-GtkTreeModel *ctm_model_get_all_projects (CtmModel *self);
-GtkTreeModel *ctm_model_get_all_tasks    (CtmModel *self);
-GtkTreeModel *ctm_model_get_all_events   (CtmModel *self);
+GtkListStore *ctm_model_person_new  (CtmModel *self);
+GtkListStore *ctm_model_project_new (CtmModel *self);
+GtkListStore *ctm_model_task_new    (CtmModel *self);
+GtkListStore *ctm_model_event_new   (CtmModel *self);
+
+void ctm_model_person_get_all  (CtmModel     *self,
+                                GtkListStore *store);
+void ctm_model_project_get_all (CtmModel     *self,
+                                GtkListStore *store);
+void ctm_model_task_get_all    (CtmModel     *self,
+                                GtkListStore *store);
+void ctm_model_event_get_all   (CtmModel     *self,
+                                GtkListStore *store);
 
 G_END_DECLS

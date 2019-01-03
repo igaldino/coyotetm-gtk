@@ -98,16 +98,8 @@ ctm_app_startup (GApplication *app)
   /* GtkBuilder *builder;
   GMenuModel *menu; */
   const gchar *quit_accels[2] = {"<Ctrl>Q", NULL};
-  CtmApp *self = CTM_APP (app);
 
   G_APPLICATION_CLASS (ctm_app_parent_class)->startup (app);
-
-  self->db = ctm_db_new ();
-  ctm_db_set_filename (self->db,
-                       g_build_filename (g_get_user_data_dir (),
-                                         "coyotetm.db",
-                                         NULL));
-  ctm_db_open (self->db);
 
   g_action_map_add_action_entries (G_ACTION_MAP (app),
                                    ctm_app_menu,
@@ -155,12 +147,27 @@ ctm_app_activate (GApplication *app)
 {
   CtmApp *self = CTM_APP (app);
   GtkWindow *window = gtk_application_get_active_window (GTK_APPLICATION (app));
+  const char *db_name = g_build_filename (g_get_user_data_dir (), "coyotetm.db", NULL);
+  GFile *db_file = NULL;
+
+  if (self->run_tests)
+    {
+      db_file = g_file_new_for_path (db_name);
+      g_file_delete (db_file, NULL, NULL);
+      g_clear_object (&db_file);
+    }
+
+  self->db = ctm_db_new ();
+  ctm_db_set_filename (self->db, db_name);
+  ctm_db_open (self->db);
+
+  if (self->run_tests)
+    {
+      ctm_db_test (self->db);
+    }
 
   if (!window)
     window = GTK_WINDOW (ctm_window_new (self));
-
-  if (self->run_tests)
-    ctm_db_test (self->db);
 
   gtk_window_present (window);
 }

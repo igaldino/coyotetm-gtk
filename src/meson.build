@@ -6,7 +6,7 @@ sources = files(
   'ctm-project.c',
   'ctm-task.c',
   'ctm-event.c',
-  'ctm-window.c',
+  'ctm-main-window.c',
   'ctm-resource.c',
   'ctm-main.c'
 )
@@ -24,4 +24,3 @@ executable(
   dependencies: coyotetm_deps,
   install: true
 )
-

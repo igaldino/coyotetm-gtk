@@ -21,7 +21,7 @@
 #endif
 
 #include "ctm-app.h"
-#include "ctm-window.h"
+#include "ctm-main-window.h"
 
 struct _CtmApp
 {
@@ -60,12 +60,12 @@ ctm_app_about (GSimpleAction *action,
                gpointer       app)
 {
   GtkWindow *win = gtk_application_get_active_window (GTK_APPLICATION (app));
-  const gchar *authors[] = {"Isaque Galdino <igaldino@gmail.com>", NULL};
+  const char *authors[] = {"Isaque Galdino <igaldino@gmail.com>", NULL};
 
   gtk_show_about_dialog (GTK_WINDOW (win),
-                         "program-name", "Coyote Task Manager",
+                         "program-name", "CoyoteTM",
                          "version", PACKAGE_VERSION,
-                         "copyright", "(C) 2000-2017 Isaque Galdino",
+                         "copyright", "(C) 2000-2019 Isaque Galdino",
                          "license-type", GTK_LICENSE_GPL_3_0,
                          "website", PACKAGE_URL,
                          "comments", "Manage tasks like a coyote",
@@ -97,7 +97,7 @@ ctm_app_startup (GApplication *app)
 {
   /* GtkBuilder *builder;
   GMenuModel *menu; */
-  const gchar *quit_accels[2] = {"<Ctrl>Q", NULL};
+  const char *quit_accels[2] = {"<Ctrl>Q", NULL};
 
   G_APPLICATION_CLASS (ctm_app_parent_class)->startup (app);
 
@@ -167,7 +167,7 @@ ctm_app_activate (GApplication *app)
     }
 
   if (!window)
-    window = GTK_WINDOW (ctm_window_new (self));
+    window = GTK_WINDOW (ctm_main_window_new (self));
 
   gtk_window_present (window);
 }
@@ -185,7 +185,7 @@ CtmApp *
 ctm_app_new (void)
 {
   return g_object_new (CTM_TYPE_APP,
-                       "application-id", "org.gtk.coyotetm",
+                       "application-id", "io.github.CoyoteTM",
                        "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
                        NULL);
 }

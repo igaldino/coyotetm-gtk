@@ -51,10 +51,15 @@ typedef enum
   CTM_MODEL_TASK_COLUMN_DESCRIPTION,
   CTM_MODEL_TASK_COLUMN_NOTES,
   CTM_MODEL_TASK_COLUMN_BEGIN,
+  CTM_MODEL_TASK_COLUMN_BEGIN_STRING,
   CTM_MODEL_TASK_COLUMN_END,
+  CTM_MODEL_TASK_COLUMN_END_STRING,
   CTM_MODEL_TASK_COLUMN_DUE,
+  CTM_MODEL_TASK_COLUMN_DUE_STRING,
   CTM_MODEL_TASK_COLUMN_STATUS,
+  CTM_MODEL_TASK_COLUMN_STATUS_STRING,
   CTM_MODEL_TASK_COLUMN_PRIORITY,
+  CTM_MODEL_TASK_COLUMN_PRIORITY_STRING,
   CTM_MODEL_TASK_COLUMN_NOO
 } CtmModelTaskColumnType;
 
@@ -64,7 +69,9 @@ typedef enum
   CTM_MODEL_EVENT_COLUMN_TASK_ID,
   CTM_MODEL_EVENT_COLUMN_TASK_DESCRIPTION,
   CTM_MODEL_EVENT_COLUMN_WHEN,
+  CTM_MODEL_EVENT_COLUMN_WHEN_STRING,
   CTM_MODEL_EVENT_COLUMN_TIME,
+  CTM_MODEL_EVENT_COLUMN_TIME_STRING,
   CTM_MODEL_EVENT_COLUMN_NOTES,
   CTM_MODEL_EVENT_COLUMN_NOO
 } CtmModelEventColumnType;
@@ -75,18 +82,9 @@ G_DECLARE_FINAL_TYPE (CtmModel, ctm_model, CTM, MODEL, GObject)
 
 CtmModel *ctm_model_new (void);
 
-GtkListStore *ctm_model_person_new  (CtmModel *self);
-GtkListStore *ctm_model_project_new (CtmModel *self);
-GtkListStore *ctm_model_task_new    (CtmModel *self);
-GtkListStore *ctm_model_event_new   (CtmModel *self);
-
-void ctm_model_person_get_all  (CtmModel     *self,
-                                GtkListStore *store);
-void ctm_model_project_get_all (CtmModel     *self,
-                                GtkListStore *store);
-void ctm_model_task_get_all    (CtmModel     *self,
-                                GtkListStore *store);
-void ctm_model_event_get_all   (CtmModel     *self,
-                                GtkListStore *store);
+GtkListStore *ctm_model_person_get_all  (CtmModel *self);
+GtkListStore *ctm_model_project_get_all (CtmModel *self);
+GtkListStore *ctm_model_task_get_all    (CtmModel *self);
+GtkListStore *ctm_model_event_get_all   (CtmModel *self);
 
 G_END_DECLS

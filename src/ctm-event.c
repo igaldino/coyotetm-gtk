@@ -24,8 +24,9 @@ struct _CtmEvent
   guint        id;
   guint        task_id;
   GDateTime   *when;
+  char        *when_string;
   gfloat       time;
-  gchar       *notes;
+  char        *notes;
 };
 
 G_DEFINE_TYPE (CtmEvent, ctm_event, GOM_TYPE_RESOURCE)
@@ -48,6 +49,7 @@ ctm_event_finalize (GObject *object)
   CtmEvent *self = (CtmEvent *)object;
 
   g_clear_pointer (&self->when, g_date_time_unref);
+  g_clear_pointer (&self->when_string, g_free);
   g_clear_pointer (&self->notes, g_free);
 
   G_OBJECT_CLASS (ctm_event_parent_class)->finalize (object);
@@ -219,6 +221,12 @@ ctm_event_get_when (CtmEvent *self)
   return self->when;
 }
 
+const char *
+ctm_event_get_when_string (CtmEvent *self)
+{
+  return self->when_string;
+}
+
 void
 ctm_event_set_when (CtmEvent  *self,
                     GDateTime *when)
@@ -232,6 +240,8 @@ ctm_event_set_when (CtmEvent  *self,
                                           g_date_time_get_month (when),
                                           g_date_time_get_day_of_month (when),
                                           0, 0, 0.0);
+      g_clear_pointer (&self->when_string, g_free);
+      self->when_string = g_date_time_format (self->when, "%x");
     }
 }
 
@@ -248,15 +258,15 @@ ctm_event_set_time (CtmEvent *self,
   self->time = time;
 }
 
-const gchar *
+const char *
 ctm_event_get_notes (CtmEvent *self)
 {
   return self->notes;
 }
 
 void
-ctm_event_set_notes (CtmEvent     *self,
-                     const gchar *notes)
+ctm_event_set_notes (CtmEvent   *self,
+                     const char *notes)
 {
   if (g_strcmp0 (notes, self->notes))
     {

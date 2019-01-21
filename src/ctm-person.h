@@ -32,9 +32,9 @@ guint        ctm_person_get_id   (CtmPerson   *self);
 void         ctm_person_set_id   (CtmPerson   *self,
                                   const guint  id);
 
-const gchar *ctm_person_get_name (CtmPerson   *self);
+const char  *ctm_person_get_name (CtmPerson   *self);
 void         ctm_person_set_name (CtmPerson   *self,
-                                  const gchar *name);
+                                  const char  *name);
 
 G_END_DECLS
 

@@ -22,8 +22,8 @@ struct _CtmProject
 {
   GomResource  parent_instance;
   guint        id;
-  gchar       *name;
-  gchar       *description;
+  char        *name;
+  char        *description;
 };
 
 G_DEFINE_TYPE (CtmProject, ctm_project, GOM_TYPE_RESOURCE)
@@ -164,7 +164,7 @@ ctm_project_set_id (CtmProject  *self,
   self->id = id;
 }
 
-const gchar *
+const char *
 ctm_project_get_name (CtmProject *self)
 {
   g_return_val_if_fail (self, NULL);
@@ -173,8 +173,8 @@ ctm_project_get_name (CtmProject *self)
 }
 
 void
-ctm_project_set_name (CtmProject  *self,
-                      const gchar *name)
+ctm_project_set_name (CtmProject *self,
+                      const char *name)
 {
   if (g_strcmp0 (name, self->name))
     {
@@ -183,15 +183,15 @@ ctm_project_set_name (CtmProject  *self,
     }
 }
 
-const gchar *
+const char *
 ctm_project_get_description (CtmProject *self)
 {
   return self->description;
 }
 
 void
-ctm_project_set_description (CtmProject  *self,
-                             const gchar *description)
+ctm_project_set_description (CtmProject *self,
+                             const char *description)
 {
   if (g_strcmp0 (description, self->description))
     {

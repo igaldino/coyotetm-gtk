@@ -31,9 +31,9 @@ G_DECLARE_FINAL_TYPE (CtmDB, ctm_db, CTM, DB, GObject)
 
 CtmDB       *ctm_db_new               (void);
 
-const gchar *ctm_db_get_filename      (CtmDB       *self);
+const char  *ctm_db_get_filename      (CtmDB       *self);
 void         ctm_db_set_filename      (CtmDB       *self,
-                                       const gchar *name);
+                                       const char  *name);
 
 void         ctm_db_open              (CtmDB       *self);
 void         ctm_db_close             (CtmDB       *self);

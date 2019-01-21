@@ -32,13 +32,13 @@ guint        ctm_project_get_id          (CtmProject  *self);
 void         ctm_project_set_id          (CtmProject  *self,
                                           const guint  id);
 
-const gchar *ctm_project_get_name        (CtmProject  *self);
+const char  *ctm_project_get_name        (CtmProject  *self);
 void         ctm_project_set_name        (CtmProject  *self,
-                                          const gchar *name);
+                                          const char  *name);
 
-const gchar *ctm_project_get_description (CtmProject  *self);
+const char  *ctm_project_get_description (CtmProject  *self);
 void         ctm_project_set_description (CtmProject  *self,
-                                          const gchar *description);
+                                          const char  *description);
 
 G_END_DECLS
 

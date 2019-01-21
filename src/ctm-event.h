@@ -26,27 +26,28 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (CtmEvent, ctm_event, CTM, EVENT, GomResource)
 
-CtmEvent    *ctm_event_new         (void);
+CtmEvent    *ctm_event_new             (void);
 
-guint        ctm_event_get_id      (CtmEvent    *self);
-void         ctm_event_set_id      (CtmEvent    *self,
-                                    const guint  id);
+guint        ctm_event_get_id          (CtmEvent    *self);
+void         ctm_event_set_id          (CtmEvent    *self,
+                                        const guint  id);
 
-guint        ctm_event_get_task_id (CtmEvent    *self);
-void         ctm_event_set_task_id (CtmEvent    *self,
-                                    const guint  task_id);
+guint        ctm_event_get_task_id     (CtmEvent    *self);
+void         ctm_event_set_task_id     (CtmEvent    *self,
+                                        const guint  task_id);
 
-GDateTime   *ctm_event_get_when    (CtmEvent    *self);
-void         ctm_event_set_when    (CtmEvent    *self,
-                                    GDateTime   *when);
+GDateTime   *ctm_event_get_when        (CtmEvent    *self);
+const char  *ctm_event_get_when_string (CtmEvent    *self);
+void         ctm_event_set_when        (CtmEvent    *self,
+                                        GDateTime   *when);
 
-gfloat       ctm_event_get_time    (CtmEvent    *self);
-void         ctm_event_set_time    (CtmEvent    *self,
-                                    gfloat       time);
+gfloat       ctm_event_get_time        (CtmEvent    *self);
+void         ctm_event_set_time        (CtmEvent    *self,
+                                        gfloat       time);
 
-const gchar *ctm_event_get_notes   (CtmEvent    *self);
-void         ctm_event_set_notes   (CtmEvent    *self,
-                                    const gchar *notes);
+const char  *ctm_event_get_notes       (CtmEvent    *self);
+void         ctm_event_set_notes       (CtmEvent    *self,
+                                        const char  *notes);
 
 G_END_DECLS
 

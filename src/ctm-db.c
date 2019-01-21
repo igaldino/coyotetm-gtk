@@ -21,7 +21,7 @@
 struct _CtmDB
 {
   GObject        parent_instance;
-  gchar         *filename;
+  char          *filename;
   GomAdapter    *adapter;
   GomRepository *repository;
 };
@@ -115,15 +115,15 @@ ctm_db_new (void)
   return g_object_new (CTM_TYPE_DB, NULL);
 }
 
-const gchar *
+const char *
 ctm_db_get_filename (CtmDB *self)
 {
   return self->filename;
 }
 
 void
-ctm_db_set_filename (CtmDB       *self,
-                     const gchar *filename)
+ctm_db_set_filename (CtmDB      *self,
+                     const char *filename)
 {
   if (g_strcmp0 (filename, self->filename))
     {

@@ -24,11 +24,14 @@ struct _CtmTask
   guint        id;
   guint        person_id;
   guint        project_id;
-  gchar       *description;
-  gchar       *notes;
+  char        *description;
+  char        *notes;
   GDateTime   *begin;
+  char        *begin_string;
   GDateTime   *end;
+  char        *end_string;
   GDateTime   *due;
+  char        *due_string;
   guint        status;
   guint        priority;
 };
@@ -52,6 +55,25 @@ enum {
 
 static GParamSpec *properties [LAST_PROP];
 
+static char *ctm_task_status_string [] =
+{
+  "Not started",
+  "In progress",
+  "Completed",
+  "Canceled",
+  "On hold"
+};
+
+static char *ctm_task_priority_string [] =
+{
+  "Critical",
+  "High",
+  "Medium",
+  "Low",
+  "None"
+};
+
+
 static void
 ctm_task_finalize (GObject *object)
 {
@@ -60,8 +82,11 @@ ctm_task_finalize (GObject *object)
   g_clear_pointer (&self->description, g_free);
   g_clear_pointer (&self->notes, g_free);
   g_clear_pointer (&self->begin, g_date_time_unref);
+  g_clear_pointer (&self->begin_string, g_free);
   g_clear_pointer (&self->end, g_date_time_unref);
+  g_clear_pointer (&self->end_string, g_free);
   g_clear_pointer (&self->due, g_date_time_unref);
+  g_clear_pointer (&self->due_string, g_free);
 
   G_OBJECT_CLASS (ctm_task_parent_class)->finalize (object);
 }
@@ -313,7 +338,7 @@ ctm_task_set_project_id (CtmTask    *self,
   self->project_id = project_id;
 }
 
-const gchar *
+const char *
 ctm_task_get_description (CtmTask *self)
 {
   g_return_val_if_fail (self, NULL);
@@ -322,8 +347,8 @@ ctm_task_get_description (CtmTask *self)
 }
 
 void
-ctm_task_set_description (CtmTask     *self,
-                          const gchar *description)
+ctm_task_set_description (CtmTask    *self,
+                          const char *description)
 {
   if (g_strcmp0 (description, self->description))
     {
@@ -332,15 +357,15 @@ ctm_task_set_description (CtmTask     *self,
     }
 }
 
-const gchar *
+const char *
 ctm_task_get_notes (CtmTask *self)
 {
   return self->notes;
 }
 
 void
-ctm_task_set_notes (CtmTask     *self,
-                    const gchar *notes)
+ctm_task_set_notes (CtmTask    *self,
+                    const char *notes)
 {
   if (g_strcmp0 (notes, self->notes))
     {
@@ -353,6 +378,12 @@ GDateTime *
 ctm_task_get_begin (CtmTask *self)
 {
   return self->begin;
+}
+
+const char *
+ctm_task_get_begin_string (CtmTask *self)
+{
+  return self->begin_string;
 }
 
 void
@@ -368,6 +399,8 @@ ctm_task_set_begin (CtmTask   *self,
                                            g_date_time_get_month (begin),
                                            g_date_time_get_day_of_month (begin),
                                            0, 0, 0.0);
+      g_clear_pointer (&self->begin_string, g_free);
+      self->begin_string = g_date_time_format (self->begin, "%x");
     }
 }
 
@@ -375,6 +408,12 @@ GDateTime *
 ctm_task_get_end (CtmTask *self)
 {
   return self->end;
+}
+
+const char *
+ctm_task_get_end_string (CtmTask *self)
+{
+  return self->end_string;
 }
 
 void
@@ -390,6 +429,8 @@ ctm_task_set_end (CtmTask   *self,
                                          g_date_time_get_month (end),
                                          g_date_time_get_day_of_month (end),
                                          0, 0, 0.0);
+      g_clear_pointer (&self->end_string, g_free);
+      self->end_string = g_date_time_format (self->end, "%x");
     }
 }
 
@@ -397,6 +438,12 @@ GDateTime *
 ctm_task_get_due (CtmTask *self)
 {
   return self->due;
+}
+
+const char *
+ctm_task_get_due_string (CtmTask *self)
+{
+  return self->due_string;
 }
 
 void
@@ -412,6 +459,8 @@ ctm_task_set_due (CtmTask   *self,
                                          g_date_time_get_month (due),
                                          g_date_time_get_day_of_month (due),
                                          0, 0, 0.0);
+      g_clear_pointer (&self->due_string, g_free);
+      self->due_string = g_date_time_format (self->due, "%x");
     }
 }
 
@@ -419,6 +468,12 @@ CtmTaskStatusType
 ctm_task_get_status (CtmTask *self)
 {
   return self->status;
+}
+
+const char *
+ctm_task_get_status_string (CtmTask *self)
+{
+  return ctm_task_status_string [self->status];
 }
 
 void
@@ -432,6 +487,12 @@ CtmTaskPriorityType
 ctm_task_get_priority (CtmTask *self)
 {
   return self->priority;
+}
+
+const char *
+ctm_task_get_priority_string (CtmTask *self)
+{
+  return ctm_task_priority_string [self->priority];
 }
 
 void

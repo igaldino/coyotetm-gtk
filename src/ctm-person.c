@@ -22,7 +22,7 @@ struct _CtmPerson
 {
   GomResource  parent_instance;
   guint        id;
-  gchar       *name;
+  char        *name;
 };
 
 G_DEFINE_TYPE (CtmPerson, ctm_person, GOM_TYPE_RESOURCE)
@@ -147,7 +147,7 @@ ctm_person_set_id (CtmPerson   *self,
   self->id = id;
 }
 
-const gchar *
+const char *
 ctm_person_get_name (CtmPerson *self)
 {
   g_return_val_if_fail (self, NULL);
@@ -156,8 +156,8 @@ ctm_person_get_name (CtmPerson *self)
 }
 
 void
-ctm_person_set_name (CtmPerson   *self,
-                     const gchar *name)
+ctm_person_set_name (CtmPerson  *self,
+                     const char *name)
 {
   if (g_strcmp0 (name, self->name))
     {

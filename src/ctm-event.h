@@ -19,6 +19,7 @@
 #pragma once
 
 #include <gom/gom.h>
+#include "ctm-util.h"
 
 G_BEGIN_DECLS
 

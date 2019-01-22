@@ -176,11 +176,7 @@ ctm_event_class_init (CtmEventClass *klass)
 static void
 ctm_event_init (CtmEvent *self)
 {
-  self->id = 0;
-  self->task_id = 0;
-  self->when = NULL;
-  self->time = 0;
-  self->notes = NULL;
+  ctm_event_set_when (self, ctm_util_get_today ());
 }
 
 CtmEvent *
@@ -236,12 +232,9 @@ ctm_event_set_when (CtmEvent  *self,
        !self->when))
     {
       g_clear_pointer (&self->when, g_date_time_unref);
-      self->when = g_date_time_new_local (g_date_time_get_year (when),
-                                          g_date_time_get_month (when),
-                                          g_date_time_get_day_of_month (when),
-                                          0, 0, 0.0);
+      self->when = ctm_util_copy_date (when);
       g_clear_pointer (&self->when_string, g_free);
-      self->when_string = g_date_time_format (self->when, "%x");
+      self->when_string = ctm_util_format_date (self->when);
     }
 }
 

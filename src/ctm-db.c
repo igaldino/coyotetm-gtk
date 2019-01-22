@@ -228,7 +228,13 @@ ctm_db_test (CtmDB *self)
   index_person = 1;
   person = ctm_person_new ();
   ctm_person_set_id (person, index_person++);
-  ctm_person_set_name (person, "One Person");
+  ctm_person_set_name (person, "First Person");
+  ctm_db_save (self, GOM_RESOURCE(person));
+  g_clear_object (&person);
+
+  person = ctm_person_new ();
+  ctm_person_set_id (person, index_person++);
+  ctm_person_set_name (person, "Second Person");
   ctm_db_save (self, GOM_RESOURCE(person));
   g_clear_object (&person);
 
@@ -244,6 +250,13 @@ ctm_db_test (CtmDB *self)
   ctm_project_set_id (project, index_project++);
   ctm_project_set_name (project, "project2");
   ctm_project_set_description (project, "Project Two");
+  ctm_db_save (self, GOM_RESOURCE(project));
+  g_clear_object (&project);
+
+  project = ctm_project_new ();
+  ctm_project_set_id (project, index_project++);
+  ctm_project_set_name (project, "project3");
+  ctm_project_set_description (project, "Project Three");
   ctm_db_save (self, GOM_RESOURCE(project));
   g_clear_object (&project);
 
@@ -309,9 +322,10 @@ ctm_db_test (CtmDB *self)
       for (index = 0; index < data->len; index++)
         {
           task = CTM_TASK (g_ptr_array_index (data, index));
-          g_print ("%d\t%s\n",
+          g_print ("%d\t%s\t%s\n",
                    ctm_task_get_id (task),
-                   ctm_task_get_description (task));
+                   ctm_task_get_description (task),
+                   ctm_task_get_created_string (task));
         }
       g_ptr_array_free (data, TRUE);
     }

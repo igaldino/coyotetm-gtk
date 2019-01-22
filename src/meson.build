@@ -1,14 +1,14 @@
 sources = files(
   'ctm-app.c',
   'ctm-db.c',
+  'ctm-event.c',
+  'ctm-main.c',
+  'ctm-main-window.c',
   'ctm-model.c',
   'ctm-person.c',
   'ctm-project.c',
-  'ctm-task.c',
-  'ctm-event.c',
-  'ctm-main-window.c',
   'ctm-resource.c',
-  'ctm-main.c'
+  'ctm-task.c'
 )
 
 sources += gnome.compile_resources(

@@ -8,7 +8,8 @@ sources = files(
   'ctm-person.c',
   'ctm-project.c',
   'ctm-resource.c',
-  'ctm-task.c'
+  'ctm-task.c',
+  'ctm-util.c'
 )
 
 sources += gnome.compile_resources(

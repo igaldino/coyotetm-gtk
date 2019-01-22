@@ -34,6 +34,10 @@ struct _CtmTask
   char        *due_string;
   guint        status;
   guint        priority;
+  GDateTime   *created;
+  char        *created_string;
+  GDateTime   *updated;
+  char        *updated_string;
 };
 
 G_DEFINE_TYPE (CtmTask, ctm_task, GOM_TYPE_RESOURCE)
@@ -50,6 +54,8 @@ enum {
   PROP_DUE,
   PROP_STATUS,
   PROP_PRIORITY,
+  PROP_CREATED,
+  PROP_UPDATED,
   LAST_PROP
 };
 
@@ -87,6 +93,10 @@ ctm_task_finalize (GObject *object)
   g_clear_pointer (&self->end_string, g_free);
   g_clear_pointer (&self->due, g_date_time_unref);
   g_clear_pointer (&self->due_string, g_free);
+  g_clear_pointer (&self->created, g_date_time_unref);
+  g_clear_pointer (&self->created_string, g_free);
+  g_clear_pointer (&self->updated, g_date_time_unref);
+  g_clear_pointer (&self->updated_string, g_free);
 
   G_OBJECT_CLASS (ctm_task_parent_class)->finalize (object);
 }
@@ -130,6 +140,12 @@ ctm_task_get_property (GObject    *object,
       break;
     case PROP_PRIORITY:
       g_value_set_uint (value, ctm_task_get_priority (self));
+      break;
+    case PROP_CREATED:
+      g_value_set_boxed (value, ctm_task_get_created (self));
+      break;
+    case PROP_UPDATED:
+      g_value_set_boxed (value, ctm_task_get_updated (self));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -175,6 +191,12 @@ ctm_task_set_property (GObject      *object,
       break;
     case PROP_PRIORITY:
       ctm_task_set_priority (self, g_value_get_uint (value));
+      break;
+    case PROP_CREATED:
+      ctm_task_set_created (self, g_value_get_boxed (value));
+      break;
+    case PROP_UPDATED:
+      ctm_task_set_updated (self, g_value_get_boxed (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -273,6 +295,20 @@ ctm_task_class_init (CtmTaskClass *klass)
                        0,
                        G_PARAM_READWRITE);
 
+  properties [PROP_CREATED] =
+    g_param_spec_boxed ("created",
+                        "Created",
+                        "The created date of the task",
+                        G_TYPE_DATE_TIME,
+                        G_PARAM_READWRITE);
+
+  properties [PROP_UPDATED] =
+    g_param_spec_boxed ("updated",
+                        "Updated",
+                        "The updated date of the task",
+                        G_TYPE_DATE_TIME,
+                        G_PARAM_READWRITE);
+
   g_object_class_install_properties (object_class, LAST_PROP, properties);
 
   gom_resource_class_set_primary_key(resource_class, "id");
@@ -281,16 +317,8 @@ ctm_task_class_init (CtmTaskClass *klass)
 static void
 ctm_task_init (CtmTask *self)
 {
-  self->id = 0;
-  self->person_id = 0;
-  self->project_id = 0;
-  self->description = NULL;
-  self->notes = NULL;
-  self->begin = NULL;
-  self->end = NULL;
-  self->due = NULL;
-  self->status = 0;
-  self->priority = 0;
+  ctm_task_set_created (self, ctm_util_get_today ());
+  ctm_task_set_updated (self, ctm_util_copy_date (self->created));
 }
 
 CtmTask *
@@ -395,12 +423,9 @@ ctm_task_set_begin (CtmTask   *self,
        !self->begin))
     {
       g_clear_pointer (&self->begin, g_date_time_unref);
-      self->begin = g_date_time_new_local (g_date_time_get_year (begin),
-                                           g_date_time_get_month (begin),
-                                           g_date_time_get_day_of_month (begin),
-                                           0, 0, 0.0);
+      self->begin = ctm_util_copy_date (begin);
       g_clear_pointer (&self->begin_string, g_free);
-      self->begin_string = g_date_time_format (self->begin, "%x");
+      self->begin_string = ctm_util_format_date (self->begin);
     }
 }
 
@@ -425,12 +450,9 @@ ctm_task_set_end (CtmTask   *self,
        !self->end))
     {
       g_clear_pointer (&self->end, g_date_time_unref);
-      self->end = g_date_time_new_local (g_date_time_get_year (end),
-                                         g_date_time_get_month (end),
-                                         g_date_time_get_day_of_month (end),
-                                         0, 0, 0.0);
+      self->end = ctm_util_copy_date (end);
       g_clear_pointer (&self->end_string, g_free);
-      self->end_string = g_date_time_format (self->end, "%x");
+      self->end_string = ctm_util_format_date (self->end);
     }
 }
 
@@ -455,12 +477,9 @@ ctm_task_set_due (CtmTask   *self,
        !self->due))
     {
       g_clear_pointer (&self->due, g_date_time_unref);
-      self->due = g_date_time_new_local (g_date_time_get_year (due),
-                                         g_date_time_get_month (due),
-                                         g_date_time_get_day_of_month (due),
-                                         0, 0, 0.0);
+      self->due = ctm_util_copy_date (due);
       g_clear_pointer (&self->due_string, g_free);
-      self->due_string = g_date_time_format (self->due, "%x");
+      self->due_string = ctm_util_format_date (self->due);
     }
 }
 
@@ -500,5 +519,59 @@ ctm_task_set_priority (CtmTask             *self,
                        CtmTaskPriorityType  priority)
 {
   self->priority = priority;
+}
+
+GDateTime *
+ctm_task_get_created (CtmTask *self)
+{
+  return self->created;
+}
+
+const char *
+ctm_task_get_created_string (CtmTask *self)
+{
+  return self->created_string;
+}
+
+void
+ctm_task_set_created (CtmTask   *self,
+                      GDateTime *created)
+{
+  if (created &&
+      ((self->created && !g_date_time_equal (created, self->created)) ||
+       !self->created))
+    {
+      g_clear_pointer (&self->created, g_date_time_unref);
+      self->created = ctm_util_copy_date (created);
+      g_clear_pointer (&self->created_string, g_free);
+      self->created_string = ctm_util_format_date (self->created);
+    }
+}
+
+GDateTime *
+ctm_task_get_updated (CtmTask *self)
+{
+  return self->updated;
+}
+
+const char *
+ctm_task_get_updated_string (CtmTask *self)
+{
+  return self->updated_string;
+}
+
+void
+ctm_task_set_updated (CtmTask   *self,
+                      GDateTime *updated)
+{
+  if (updated &&
+      ((self->updated && !g_date_time_equal (updated, self->updated)) ||
+       !self->updated))
+    {
+      g_clear_pointer (&self->updated, g_date_time_unref);
+      self->updated = ctm_util_copy_date (updated);
+      g_clear_pointer (&self->updated_string, g_free);
+      self->updated_string = ctm_util_format_date (self->updated);
+    }
 }
 

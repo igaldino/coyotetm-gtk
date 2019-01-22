@@ -19,6 +19,7 @@
 #pragma once
 
 #include <gom/gom.h>
+#include "ctm-util.h"
 
 G_BEGIN_DECLS
 
@@ -92,6 +93,16 @@ guint        ctm_task_get_priority        (CtmTask             *self);
 const char  *ctm_task_get_priority_string (CtmTask             *self);
 void         ctm_task_set_priority        (CtmTask             *self,
                                            CtmTaskPriorityType  priority);
+
+GDateTime   *ctm_task_get_created         (CtmTask             *self);
+const char  *ctm_task_get_created_string  (CtmTask             *self);
+void         ctm_task_set_created         (CtmTask             *self,
+                                           GDateTime           *created);
+
+GDateTime   *ctm_task_get_updated         (CtmTask             *self);
+const char  *ctm_task_get_updated_string  (CtmTask             *self);
+void         ctm_task_set_updated         (CtmTask             *self,
+                                           GDateTime           *updated);
 
 G_END_DECLS
 

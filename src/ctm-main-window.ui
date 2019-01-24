@@ -181,6 +181,8 @@
       <object class="GtkHeaderBar" id="header">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="title" translatable="yes">Task Manager</property>
+        <property name="has_subtitle">False</property>
         <property name="show_close_button">True</property>
         <child>
           <object class="GtkButton" id="new_button">
@@ -189,13 +191,6 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <signal name="clicked" handler="on_new_button_clicked" swapped="yes"/>
-          </object>
-        </child>
-        <child type="title">
-          <object class="GtkStackSwitcher">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="stack">stack</property>
           </object>
         </child>
         <child>
@@ -271,38 +266,12 @@
       </object>
     </child>
     <child>
-      <object class="GtkStack" id="stack">
+      <object class="GtkTreeView" id="task_list">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <signal name="notify::visible-child" handler="on_stack_changed" swapped="yes"/>
-        <child>
-          <object class="GtkTreeView" id="task_list">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <signal name="row-activated" handler="on_list_row_activated" swapped="no"/>
-            <child internal-child="selection">
-              <object class="GtkTreeSelection"/>
-            </child>
-          </object>
-          <packing>
-            <property name="name">task-page</property>
-            <property name="title" translatable="yes">Tasks</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkTreeView" id="event_list">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <signal name="row-activated" handler="on_list_row_activated" swapped="no"/>
-            <child internal-child="selection">
-              <object class="GtkTreeSelection"/>
-            </child>
-          </object>
-          <packing>
-            <property name="name">event-page</property>
-            <property name="title" translatable="yes">Events</property>
-            <property name="position">1</property>
-          </packing>
+        <property name="can_focus">True</property>
+        <signal name="row-activated" handler="on_list_row_activated" swapped="no"/>
+        <child internal-child="selection">
+          <object class="GtkTreeSelection"/>
         </child>
       </object>
     </child>

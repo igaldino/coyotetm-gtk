@@ -23,9 +23,7 @@ struct _CtmMainWindow
 {
   GtkApplicationWindow  parent_instance;
   GtkHeaderBar         *header;
-  GtkStack             *stack;
   GtkTreeView          *task_list;
-  GtkTreeView          *event_list;
   GtkStack             *filter_stack;
   GtkComboBox          *project_combo;
   GtkComboBox          *person_combo;
@@ -34,41 +32,13 @@ struct _CtmMainWindow
 
 G_DEFINE_TYPE (CtmMainWindow, ctm_main_window, GTK_TYPE_APPLICATION_WINDOW)
 
-typedef enum
-{
-  CURRENT_PAGE_TASK_LIST,
-  CURRENT_PAGE_EVENT_LIST,
-  CURRENT_PAGE_NOO
-} CurrentPageType;
-
-static CurrentPageType get_current_page               (CtmMainWindow     *self);
-
-static void            show_task_list                 (CtmMainWindow     *self);
-static void            show_event_list                (CtmMainWindow     *self);
-
-static gboolean        filter_task_list               (GtkTreeModel      *model,
-                                                       GtkTreeIter       *iter,
-                                                       gpointer           data);
-
-static void            show_task_panel                (CtmMainWindow     *self);
-static void            show_event_panel               (CtmMainWindow     *self);
-
-static void            show_filter_popover            (CtmMainWindow     *self);
-static void            show_clear_filter_button       (CtmMainWindow     *self);
 static void            clear_filter_popover           (CtmMainWindow     *self);
 
 static void            edit_task_panel                (CtmMainWindow     *self,
                                                        GtkTreePath       *path);
-static void            edit_event_panel               (CtmMainWindow     *self,
-                                                       GtkTreePath       *path);
 
-static void            on_stack_changed               (GtkWidget         *widget,
-                                                       gpointer           data);
-
-static void            on_new_button_clicked          (GtkWidget         *widget,
-                                                       gpointer           data);
-
-static void            on_filter_button_clicked       (GtkWidget         *widget,
+static gboolean        filter_task_list               (GtkTreeModel      *model,
+                                                       GtkTreeIter       *iter,
                                                        gpointer           data);
 
 static void            on_clear_filter_button_clicked (GtkWidget         *widget,
@@ -77,10 +47,24 @@ static void            on_clear_filter_button_clicked (GtkWidget         *widget
 static void            on_filter_combo_changed        (GtkWidget         *widget,
                                                        gpointer           data);
 
+static void            on_filter_button_clicked       (GtkWidget         *widget,
+                                                       gpointer           data);
+
 static void            on_list_row_activated          (GtkTreeView       *view,
                                                        GtkTreePath       *path,
                                                        GtkTreeViewColumn *column,
                                                        gpointer           data);
+
+static void            on_new_button_clicked          (GtkWidget         *widget,
+                                                       gpointer           data);
+
+static void            show_clear_filter_button       (CtmMainWindow     *self);
+
+static void            show_filter_popover            (CtmMainWindow     *self);
+
+static void            show_task_list                 (CtmMainWindow     *self);
+
+static void            show_task_panel                (CtmMainWindow     *self);
 
 CtmMainWindow *
 ctm_main_window_new (CtmApp *app)
@@ -108,13 +92,10 @@ ctm_main_window_class_init (CtmMainWindowClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/CoyoteTM/ctm-main-window.ui");
   gtk_widget_class_bind_template_child (widget_class, CtmMainWindow, header);
-  gtk_widget_class_bind_template_child (widget_class, CtmMainWindow, stack);
   gtk_widget_class_bind_template_child (widget_class, CtmMainWindow, task_list);
-  gtk_widget_class_bind_template_child (widget_class, CtmMainWindow, event_list);
   gtk_widget_class_bind_template_child (widget_class, CtmMainWindow, filter_stack);
   gtk_widget_class_bind_template_child (widget_class, CtmMainWindow, project_combo);
   gtk_widget_class_bind_template_child (widget_class, CtmMainWindow, person_combo);
-  gtk_widget_class_bind_template_callback (widget_class, on_stack_changed);
   gtk_widget_class_bind_template_callback (widget_class, on_new_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, on_filter_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, on_clear_filter_button_clicked);
@@ -132,27 +113,12 @@ ctm_main_window_init (CtmMainWindow *self)
   show_task_list (self);
 }
 
-static CurrentPageType
-get_current_page (CtmMainWindow *self)
-{
-  GtkWidget *child = gtk_stack_get_visible_child (self->stack);
-
-  if (child == GTK_WIDGET (self->task_list))
-    {
-      return CURRENT_PAGE_TASK_LIST;
-    }
-  else if (child == GTK_WIDGET (self->event_list))
-    {
-      return CURRENT_PAGE_EVENT_LIST;
-    }
-  return CURRENT_PAGE_NOO;
-}
-
 static void
 show_task_list (CtmMainWindow *self)
 {
   static gboolean           done     = FALSE;
   g_autoptr (GtkListStore)  store    = NULL;
+  g_autoptr (GtkTreeModel)  filter   = NULL;
   g_autoptr (GtkTreeModel)  model    = NULL;
   GtkCellRenderer          *renderer = NULL;
   GtkTreeViewColumn        *column   = NULL;
@@ -162,9 +128,12 @@ show_task_list (CtmMainWindow *self)
 
   store = ctm_model_task_get_all (self->model);
 
-  model = gtk_tree_model_filter_new (GTK_TREE_MODEL (store), NULL);
-  gtk_tree_model_filter_set_visible_func (GTK_TREE_MODEL_FILTER (model),
+  filter = gtk_tree_model_filter_new (GTK_TREE_MODEL (store), NULL);
+  gtk_tree_model_filter_set_visible_func (GTK_TREE_MODEL_FILTER (filter),
                                           filter_task_list, self, NULL);
+
+  model = gtk_tree_model_sort_new_with_model (filter);
+  gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (model), CTM_MODEL_TASK_COLUMN_PRIORITY, GTK_SORT_ASCENDING);
   gtk_tree_view_set_model (self->task_list, model);
 
   renderer = gtk_cell_renderer_text_new ();
@@ -172,68 +141,44 @@ show_task_list (CtmMainWindow *self)
                                                      "text", CTM_MODEL_TASK_COLUMN_DESCRIPTION,
                                                      NULL);
   gtk_tree_view_column_set_sort_column_id (column, CTM_MODEL_TASK_COLUMN_DESCRIPTION);
+  gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
+  gtk_tree_view_column_set_fixed_width (column, 300);
   gtk_tree_view_column_set_expand (column, TRUE);
+  gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_append_column (self->task_list, column);
 
   renderer = gtk_cell_renderer_text_new ();
   column = gtk_tree_view_column_new_with_attributes ("Status", renderer,
                                                      "text", CTM_MODEL_TASK_COLUMN_STATUS_STRING,
                                                      NULL);
-  gtk_tree_view_column_set_sort_column_id (column, CTM_MODEL_TASK_COLUMN_STATUS_STRING);
+  gtk_tree_view_column_set_sort_column_id (column, CTM_MODEL_TASK_COLUMN_STATUS);
   gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
   gtk_tree_view_column_set_fixed_width (column, 100);
+  gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_append_column (self->task_list, column);
 
   renderer = gtk_cell_renderer_text_new ();
   column = gtk_tree_view_column_new_with_attributes ("Priority", renderer,
                                                      "text", CTM_MODEL_TASK_COLUMN_PRIORITY_STRING,
                                                      NULL);
-  gtk_tree_view_column_set_sort_column_id (column, CTM_MODEL_TASK_COLUMN_PRIORITY_STRING);
+  gtk_tree_view_column_set_sort_column_id (column, CTM_MODEL_TASK_COLUMN_PRIORITY);
   gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
   gtk_tree_view_column_set_fixed_width (column, 100);
+  gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_append_column (self->task_list, column);
 
-  done = TRUE;
-}
-
-static void
-show_event_list (CtmMainWindow *self)
-{
-  static gboolean           done     = FALSE;
-  g_autoptr (GtkListStore)  store    = NULL;
-  GtkCellRenderer          *renderer = NULL;
-  GtkTreeViewColumn        *column   = NULL;
-
-  if (done)
-    return;
-
-  store = ctm_model_event_get_all (self->model);
-  gtk_tree_view_set_model (self->event_list, GTK_TREE_MODEL (store));
-
   renderer = gtk_cell_renderer_text_new ();
-  column = gtk_tree_view_column_new_with_attributes ("When", renderer,
-                                                     "text", CTM_MODEL_EVENT_COLUMN_WHEN_STRING,
+  column = gtk_tree_view_column_new_with_attributes ("Updated", renderer,
+                                                     "text", CTM_MODEL_TASK_COLUMN_UPDATED_STRING,
                                                      NULL);
-  gtk_tree_view_column_set_sort_column_id (column, CTM_MODEL_EVENT_COLUMN_WHEN);
+  gtk_tree_view_column_set_sort_column_id (column, CTM_MODEL_TASK_COLUMN_UPDATED_SORT);
+  gtk_tree_view_column_set_sort_order (column, GTK_SORT_DESCENDING);
   gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
   gtk_tree_view_column_set_fixed_width (column, 100);
-  gtk_tree_view_append_column (self->event_list, column);
+  gtk_tree_view_column_set_resizable (column, TRUE);
+  gtk_tree_view_append_column (self->task_list, column);
 
-  renderer = gtk_cell_renderer_text_new ();
-  column = gtk_tree_view_column_new_with_attributes ("Task", renderer,
-                                                     "text", CTM_MODEL_EVENT_COLUMN_TASK_DESCRIPTION,
-                                                     NULL);
-  gtk_tree_view_column_set_sort_column_id (column, CTM_MODEL_EVENT_COLUMN_TASK_DESCRIPTION);
-  gtk_tree_view_column_set_expand (column, TRUE);
-  gtk_tree_view_append_column (self->event_list, column);
-
-  renderer = gtk_cell_renderer_text_new ();
-  column = gtk_tree_view_column_new_with_attributes ("Notes", renderer,
-                                                     "text", CTM_MODEL_EVENT_COLUMN_NOTES,
-                                                     NULL);
-  gtk_tree_view_column_set_sort_column_id (column, CTM_MODEL_EVENT_COLUMN_NOTES);
-  gtk_tree_view_column_set_expand (column, TRUE);
-  gtk_tree_view_append_column (self->event_list, column);
+  gtk_tree_view_set_search_column (self->task_list, CTM_MODEL_TASK_COLUMN_DESCRIPTION);
 
   done = TRUE;
 }
@@ -310,8 +255,14 @@ show_filter_popover (CtmMainWindow *self)
 static void
 show_clear_filter_button (CtmMainWindow *self)
 {
+  GtkTreeModel *model  = NULL;
+  GtkTreeModel *filter = NULL;
+
+  model = gtk_tree_view_get_model (self->task_list);
+  filter = gtk_tree_model_sort_get_model (GTK_TREE_MODEL_SORT (model));
+
   gtk_stack_set_visible_child_name (self->filter_stack, "clear-filter-page");
-  gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (gtk_tree_view_get_model (self->task_list)));
+  gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (filter));
 }
 
 static void
@@ -329,39 +280,9 @@ show_task_panel (CtmMainWindow *self)
 }
 
 static void
-show_event_panel (CtmMainWindow *self)
-{
-}
-
-static void
 edit_task_panel (CtmMainWindow   *self,
                  GtkTreePath *path)
 {
-}
-
-static void
-edit_event_panel (CtmMainWindow   *self,
-                  GtkTreePath *path)
-{
-}
-
-static void
-on_stack_changed (GtkWidget *widget,
-                  gpointer   data)
-{
-  CtmMainWindow *self = CTM_MAIN_WINDOW (widget);
-
-  switch (get_current_page (self))
-    {
-    case CURRENT_PAGE_TASK_LIST:
-      show_task_list (self);
-      break;
-    case CURRENT_PAGE_EVENT_LIST:
-      show_event_list (self);
-      break;
-    case CURRENT_PAGE_NOO:
-      break;
-    }
 }
 
 static void
@@ -370,17 +291,7 @@ on_new_button_clicked (GtkWidget *widget,
 {
   CtmMainWindow *self = CTM_MAIN_WINDOW (widget);
 
-  switch (get_current_page (self))
-    {
-    case CURRENT_PAGE_TASK_LIST:
-      show_task_panel (self);
-      break;
-    case CURRENT_PAGE_EVENT_LIST:
-      show_event_panel (self);
-      break;
-    case CURRENT_PAGE_NOO:
-      break;
-    }
+  show_task_panel (self);
 }
 
 static void
@@ -418,18 +329,8 @@ on_list_row_activated (GtkTreeView       *view,
 {
   CtmMainWindow *self = CTM_MAIN_WINDOW (data);
 
-  switch (get_current_page (self))
-    {
-    case CURRENT_PAGE_TASK_LIST:
-      show_task_panel (self);
-      edit_task_panel (self, path);
-      break;
-    case CURRENT_PAGE_EVENT_LIST:
-      show_event_panel (self);
-      edit_event_panel (self, path);
-      break;
-    case CURRENT_PAGE_NOO:
-      break;
-    }
+  show_task_panel (self);
+  edit_task_panel (self, path);
 }
+
 

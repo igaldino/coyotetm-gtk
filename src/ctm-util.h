@@ -22,6 +22,8 @@
 
 #include <gtk/gtk.h>
 
-GDateTime *ctm_util_get_today   ();
-GDateTime *ctm_util_copy_date   (GDateTime *date);
-char      *ctm_util_format_date (GDateTime *date);
+GDateTime *ctm_util_get_today     ();
+GDateTime *ctm_util_get_yesterday ();
+GDateTime *ctm_util_get_tomorrow  ();
+GDateTime *ctm_util_copy_date     (GDateTime *date);
+char      *ctm_util_format_date   (GDateTime *date);

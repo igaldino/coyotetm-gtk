@@ -33,6 +33,24 @@ ctm_util_get_today ()
 }
 
 GDateTime *
+ctm_util_get_yesterday ()
+{
+  g_autoptr (GDateTime) today = NULL;
+
+  today = ctm_util_get_today ();
+  return g_date_time_add_days (today, -1);
+}
+
+GDateTime *
+ctm_util_get_tomorrow ()
+{
+  g_autoptr (GDateTime) today = NULL;
+
+  today = ctm_util_get_today ();
+  return g_date_time_add_days (today, 1);
+}
+
+GDateTime *
 ctm_util_copy_date (GDateTime *date)
 {
   return g_date_time_new_local (g_date_time_get_year (date),

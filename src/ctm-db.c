@@ -270,6 +270,24 @@ ctm_db_test (CtmDB *self)
           ctm_task_set_person_id (task, index);
           ctm_task_set_project_id (task, index2);
           ctm_task_set_description (task, description);
+          if (index2 == 1)
+            {
+              ctm_task_set_created (task, ctm_util_get_today ());
+              ctm_task_set_status (task, CTM_TASK_STATUS_IN_PROGRESS);
+              ctm_task_set_priority (task, CTM_TASK_PRIORITY_MEDIUM);
+            }
+          else if (index2 == 2)
+            {
+              ctm_task_set_created (task, ctm_util_get_yesterday ());
+              ctm_task_set_status (task, CTM_TASK_STATUS_ON_HOLD);
+              ctm_task_set_priority (task, CTM_TASK_PRIORITY_NONE);
+            }
+          else
+            {
+              ctm_task_set_created (task, ctm_util_get_tomorrow ());
+              ctm_task_set_status (task, CTM_TASK_STATUS_NOT_STARTED);
+              ctm_task_set_priority (task, CTM_TASK_PRIORITY_LOW);
+            }
           ctm_db_save (self, GOM_RESOURCE(task));
           g_clear_pointer (&description, g_free);
           g_clear_object (&task);

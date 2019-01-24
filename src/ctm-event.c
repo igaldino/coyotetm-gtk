@@ -24,7 +24,6 @@ struct _CtmEvent
   guint        id;
   guint        task_id;
   GDateTime   *when;
-  char        *when_string;
   gfloat       time;
   char        *notes;
 };
@@ -49,7 +48,6 @@ ctm_event_finalize (GObject *object)
   CtmEvent *self = (CtmEvent *)object;
 
   g_clear_pointer (&self->when, g_date_time_unref);
-  g_clear_pointer (&self->when_string, g_free);
   g_clear_pointer (&self->notes, g_free);
 
   G_OBJECT_CLASS (ctm_event_parent_class)->finalize (object);
@@ -217,12 +215,6 @@ ctm_event_get_when (CtmEvent *self)
   return self->when;
 }
 
-const char *
-ctm_event_get_when_string (CtmEvent *self)
-{
-  return self->when_string;
-}
-
 void
 ctm_event_set_when (CtmEvent  *self,
                     GDateTime *when)
@@ -233,8 +225,6 @@ ctm_event_set_when (CtmEvent  *self,
     {
       g_clear_pointer (&self->when, g_date_time_unref);
       self->when = ctm_util_copy_date (when);
-      g_clear_pointer (&self->when_string, g_free);
-      self->when_string = ctm_util_format_date (self->when);
     }
 }
 

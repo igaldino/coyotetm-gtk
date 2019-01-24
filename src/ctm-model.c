@@ -182,12 +182,17 @@ ctm_model_project_get_all (CtmModel *self)
 GtkListStore *
 ctm_model_task_get_all (CtmModel     *self)
 {
-  GtkListStore *store   = NULL;
-  CtmTask      *task    = NULL;
-  CtmPerson    *person  = NULL;
-  CtmProject   *project = NULL;
-  GPtrArray    *data    = NULL;
+  GtkListStore *store          = NULL;
+  CtmTask      *task           = NULL;
+  CtmPerson    *person         = NULL;
+  CtmProject   *project        = NULL;
+  GPtrArray    *data           = NULL;
   GtkTreeIter   iter;
+  char         *begin_string   = NULL;
+  char         *end_string     = NULL;
+  char         *due_string     = NULL;
+  char         *created_string = NULL;
+  char         *updated_string = NULL;
 
   data = ctm_db_get_all_tasks (self->db);
   if (!data || !data->len)
@@ -201,22 +206,33 @@ ctm_model_task_get_all (CtmModel     *self)
                               G_TYPE_STRING,
                               G_TYPE_STRING,
                               G_TYPE_STRING,
-                              G_TYPE_UINT,
+                              G_TYPE_DATE_TIME,
+                              G_TYPE_STRING,
+                              G_TYPE_DATE_TIME,
+                              G_TYPE_STRING,
+                              G_TYPE_DATE_TIME,
                               G_TYPE_STRING,
                               G_TYPE_UINT,
                               G_TYPE_STRING,
                               G_TYPE_UINT,
                               G_TYPE_STRING,
-                              G_TYPE_UINT,
+                              G_TYPE_DATE_TIME,
                               G_TYPE_STRING,
-                              G_TYPE_UINT,
-                              G_TYPE_STRING);
+                              G_TYPE_DATE_TIME,
+                              G_TYPE_STRING,
+                              G_TYPE_UINT64);
 
   for (int index = 0; index < data->len; index++)
     {
       task = CTM_TASK (g_ptr_array_index (data, index));
       person = ctm_db_get_person_by_id (self->db, ctm_task_get_person_id (task));
       project = ctm_db_get_project_by_id (self->db, ctm_task_get_project_id (task));
+
+      begin_string = ctm_util_format_date (ctm_task_get_begin (task));
+      end_string = ctm_util_format_date (ctm_task_get_end (task));
+      due_string = ctm_util_format_date (ctm_task_get_due (task));
+      created_string = ctm_util_format_date (ctm_task_get_created (task));
+      updated_string = ctm_util_format_date (ctm_task_get_updated (task));
 
       gtk_list_store_append (store, &iter);
       gtk_list_store_set (store, &iter,
@@ -228,13 +244,28 @@ ctm_model_task_get_all (CtmModel     *self)
                           CTM_MODEL_TASK_COLUMN_DESCRIPTION,     ctm_task_get_description (task),
                           CTM_MODEL_TASK_COLUMN_NOTES,           ctm_task_get_notes (task),
                           CTM_MODEL_TASK_COLUMN_BEGIN,           ctm_task_get_begin (task),
+                          CTM_MODEL_TASK_COLUMN_BEGIN_STRING,    begin_string,
                           CTM_MODEL_TASK_COLUMN_END,             ctm_task_get_end (task),
+                          CTM_MODEL_TASK_COLUMN_END_STRING,      end_string,
                           CTM_MODEL_TASK_COLUMN_DUE,             ctm_task_get_due (task),
+                          CTM_MODEL_TASK_COLUMN_DUE_STRING,      due_string,
                           CTM_MODEL_TASK_COLUMN_STATUS,          ctm_task_get_status (task),
                           CTM_MODEL_TASK_COLUMN_STATUS_STRING,   ctm_task_get_status_string (task),
                           CTM_MODEL_TASK_COLUMN_PRIORITY,        ctm_task_get_priority (task),
                           CTM_MODEL_TASK_COLUMN_PRIORITY_STRING, ctm_task_get_priority_string (task),
+                          CTM_MODEL_TASK_COLUMN_CREATED,         ctm_task_get_created (task),
+                          CTM_MODEL_TASK_COLUMN_CREATED_STRING,  created_string,
+                          CTM_MODEL_TASK_COLUMN_UPDATED,         ctm_task_get_updated (task),
+                          CTM_MODEL_TASK_COLUMN_UPDATED_STRING,  updated_string,
+                          CTM_MODEL_TASK_COLUMN_UPDATED_SORT,    g_date_time_to_unix (ctm_task_get_updated (task)),
                           -1);
+
+      g_clear_pointer (&begin_string, g_free);
+      g_clear_pointer (&end_string, g_free);
+      g_clear_pointer (&due_string, g_free);
+      g_clear_pointer (&created_string, g_free);
+      g_clear_pointer (&updated_string, g_free);
+
       g_clear_object (&person);
       g_clear_object (&project);
     }
@@ -246,11 +277,12 @@ ctm_model_task_get_all (CtmModel     *self)
 GtkListStore *
 ctm_model_event_get_all (CtmModel     *self)
 {
-  GtkListStore *store = NULL;
-  CtmEvent     *event = NULL;
-  CtmTask      *task  = NULL;
-  GPtrArray    *data  = NULL;
+  GtkListStore *store       = NULL;
+  CtmEvent     *event       = NULL;
+  CtmTask      *task        = NULL;
+  GPtrArray    *data        = NULL;
   GtkTreeIter   iter;
+  char         *when_string = NULL;
 
   data = ctm_db_get_all_events (self->db);
   if (!data || !data->len)
@@ -260,7 +292,7 @@ ctm_model_event_get_all (CtmModel     *self)
                               G_TYPE_UINT,
                               G_TYPE_UINT,
                               G_TYPE_STRING,
-                              G_TYPE_UINT,
+                              G_TYPE_DATE_TIME,
                               G_TYPE_STRING,
                               G_TYPE_FLOAT,
                               G_TYPE_STRING,
@@ -271,16 +303,21 @@ ctm_model_event_get_all (CtmModel     *self)
       event = CTM_EVENT (g_ptr_array_index (data, index));
       task = ctm_db_get_task_by_id (self->db, ctm_event_get_task_id (event));
 
+      when_string = ctm_util_format_date (ctm_event_get_when (event));
+
       gtk_list_store_append (store, &iter);
       gtk_list_store_set (store, &iter,
                           CTM_MODEL_EVENT_COLUMN_ID,               ctm_event_get_id (event),
                           CTM_MODEL_EVENT_COLUMN_TASK_ID,          ctm_event_get_task_id (event),
                           CTM_MODEL_EVENT_COLUMN_TASK_DESCRIPTION, ctm_task_get_description (task),
                           CTM_MODEL_EVENT_COLUMN_WHEN,             ctm_event_get_when (event),
-                          CTM_MODEL_EVENT_COLUMN_WHEN_STRING,      ctm_event_get_when_string (event),
+                          CTM_MODEL_EVENT_COLUMN_WHEN_STRING,      when_string,
                           CTM_MODEL_EVENT_COLUMN_TIME,             ctm_event_get_time (event),
                           CTM_MODEL_EVENT_COLUMN_NOTES,            ctm_event_get_notes (event),
                           -1);
+
+      g_clear_pointer (&when_string, g_free);
+
       g_clear_object (&task);
     }
   g_ptr_array_free (data, TRUE);

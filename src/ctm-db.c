@@ -222,6 +222,7 @@ ctm_db_test (CtmDB *self)
   CtmTask *task = NULL;
   CtmEvent *event = NULL;
   char *description = NULL;
+  char *created_string = NULL;
   int index, index2, index_person, index_project, index_task;
 
   /* create data */
@@ -340,10 +341,15 @@ ctm_db_test (CtmDB *self)
       for (index = 0; index < data->len; index++)
         {
           task = CTM_TASK (g_ptr_array_index (data, index));
+
+          created_string = ctm_util_format_date (ctm_task_get_created (task));
+
           g_print ("%d\t%s\t%s\n",
                    ctm_task_get_id (task),
                    ctm_task_get_description (task),
-                   ctm_task_get_created_string (task));
+                   created_string);
+
+          g_clear_pointer (&created_string, g_free);
         }
       g_ptr_array_free (data, TRUE);
     }

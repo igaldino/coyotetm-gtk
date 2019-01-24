@@ -27,17 +27,12 @@ struct _CtmTask
   char        *description;
   char        *notes;
   GDateTime   *begin;
-  char        *begin_string;
   GDateTime   *end;
-  char        *end_string;
   GDateTime   *due;
-  char        *due_string;
   guint        status;
   guint        priority;
   GDateTime   *created;
-  char        *created_string;
   GDateTime   *updated;
-  char        *updated_string;
 };
 
 G_DEFINE_TYPE (CtmTask, ctm_task, GOM_TYPE_RESOURCE)
@@ -88,15 +83,10 @@ ctm_task_finalize (GObject *object)
   g_clear_pointer (&self->description, g_free);
   g_clear_pointer (&self->notes, g_free);
   g_clear_pointer (&self->begin, g_date_time_unref);
-  g_clear_pointer (&self->begin_string, g_free);
   g_clear_pointer (&self->end, g_date_time_unref);
-  g_clear_pointer (&self->end_string, g_free);
   g_clear_pointer (&self->due, g_date_time_unref);
-  g_clear_pointer (&self->due_string, g_free);
   g_clear_pointer (&self->created, g_date_time_unref);
-  g_clear_pointer (&self->created_string, g_free);
   g_clear_pointer (&self->updated, g_date_time_unref);
-  g_clear_pointer (&self->updated_string, g_free);
 
   G_OBJECT_CLASS (ctm_task_parent_class)->finalize (object);
 }
@@ -318,7 +308,6 @@ static void
 ctm_task_init (CtmTask *self)
 {
   ctm_task_set_created (self, ctm_util_get_today ());
-  ctm_task_set_updated (self, ctm_util_copy_date (self->created));
 }
 
 CtmTask *
@@ -408,12 +397,6 @@ ctm_task_get_begin (CtmTask *self)
   return self->begin;
 }
 
-const char *
-ctm_task_get_begin_string (CtmTask *self)
-{
-  return self->begin_string;
-}
-
 void
 ctm_task_set_begin (CtmTask   *self,
                     GDateTime *begin)
@@ -424,8 +407,6 @@ ctm_task_set_begin (CtmTask   *self,
     {
       g_clear_pointer (&self->begin, g_date_time_unref);
       self->begin = ctm_util_copy_date (begin);
-      g_clear_pointer (&self->begin_string, g_free);
-      self->begin_string = ctm_util_format_date (self->begin);
     }
 }
 
@@ -433,12 +414,6 @@ GDateTime *
 ctm_task_get_end (CtmTask *self)
 {
   return self->end;
-}
-
-const char *
-ctm_task_get_end_string (CtmTask *self)
-{
-  return self->end_string;
 }
 
 void
@@ -451,8 +426,6 @@ ctm_task_set_end (CtmTask   *self,
     {
       g_clear_pointer (&self->end, g_date_time_unref);
       self->end = ctm_util_copy_date (end);
-      g_clear_pointer (&self->end_string, g_free);
-      self->end_string = ctm_util_format_date (self->end);
     }
 }
 
@@ -460,12 +433,6 @@ GDateTime *
 ctm_task_get_due (CtmTask *self)
 {
   return self->due;
-}
-
-const char *
-ctm_task_get_due_string (CtmTask *self)
-{
-  return self->due_string;
 }
 
 void
@@ -478,8 +445,6 @@ ctm_task_set_due (CtmTask   *self,
     {
       g_clear_pointer (&self->due, g_date_time_unref);
       self->due = ctm_util_copy_date (due);
-      g_clear_pointer (&self->due_string, g_free);
-      self->due_string = ctm_util_format_date (self->due);
     }
 }
 
@@ -527,12 +492,6 @@ ctm_task_get_created (CtmTask *self)
   return self->created;
 }
 
-const char *
-ctm_task_get_created_string (CtmTask *self)
-{
-  return self->created_string;
-}
-
 void
 ctm_task_set_created (CtmTask   *self,
                       GDateTime *created)
@@ -543,8 +502,8 @@ ctm_task_set_created (CtmTask   *self,
     {
       g_clear_pointer (&self->created, g_date_time_unref);
       self->created = ctm_util_copy_date (created);
-      g_clear_pointer (&self->created_string, g_free);
-      self->created_string = ctm_util_format_date (self->created);
+
+      ctm_task_set_updated (self, created);
     }
 }
 
@@ -552,12 +511,6 @@ GDateTime *
 ctm_task_get_updated (CtmTask *self)
 {
   return self->updated;
-}
-
-const char *
-ctm_task_get_updated_string (CtmTask *self)
-{
-  return self->updated_string;
 }
 
 void
@@ -570,8 +523,6 @@ ctm_task_set_updated (CtmTask   *self,
     {
       g_clear_pointer (&self->updated, g_date_time_unref);
       self->updated = ctm_util_copy_date (updated);
-      g_clear_pointer (&self->updated_string, g_free);
-      self->updated_string = ctm_util_format_date (self->updated);
     }
 }
 

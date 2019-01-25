@@ -24,7 +24,6 @@ struct _CtmMainWindow
   GtkApplicationWindow  parent_instance;
   GtkHeaderBar         *header;
   GtkTreeView          *task_list;
-  GtkStack             *filter_stack;
   GtkComboBox          *project_combo;
   GtkComboBox          *person_combo;
   CtmModel             *model;
@@ -93,7 +92,6 @@ ctm_main_window_class_init (CtmMainWindowClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/CoyoteTM/ctm-main-window.ui");
   gtk_widget_class_bind_template_child (widget_class, CtmMainWindow, header);
   gtk_widget_class_bind_template_child (widget_class, CtmMainWindow, task_list);
-  gtk_widget_class_bind_template_child (widget_class, CtmMainWindow, filter_stack);
   gtk_widget_class_bind_template_child (widget_class, CtmMainWindow, project_combo);
   gtk_widget_class_bind_template_child (widget_class, CtmMainWindow, person_combo);
   gtk_widget_class_bind_template_callback (widget_class, on_new_button_clicked);
@@ -267,8 +265,6 @@ show_clear_filter_button (CtmMainWindow *self)
   model = gtk_tree_view_get_model (self->task_list);
   filter = gtk_tree_model_sort_get_model (GTK_TREE_MODEL_SORT (model));
   gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (filter));
-
-  gtk_stack_set_visible_child_name (self->filter_stack, "clear-filter-page");
 }
 
 static void
@@ -283,8 +279,6 @@ clear_filter_popover (CtmMainWindow *self)
   model = gtk_tree_view_get_model (self->task_list);
   filter = gtk_tree_model_sort_get_model (GTK_TREE_MODEL_SORT (model));
   gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (filter));
-
-  gtk_stack_set_visible_child_name (self->filter_stack, "filter-page");
 }
 
 static void

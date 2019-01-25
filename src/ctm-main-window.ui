@@ -33,7 +33,6 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="hexpand">True</property>
-            <signal name="changed" handler="on_filter_combo_changed" object="CtmMainWindow" swapped="yes"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -62,7 +61,6 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="hexpand">True</property>
-            <signal name="changed" handler="on_filter_combo_changed" object="CtmMainWindow" swapped="yes"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -70,8 +68,27 @@
             <property name="position">3</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkButton" id="set_filter_button">
+            <property name="label" translatable="yes">Set Filter</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="on_set_filter_button_clicked" object="CtmMainWindow" swapped="yes"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
       </object>
     </child>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">edit-clear-symbolic</property>
   </object>
   <object class="GtkPopover" id="menu_popover">
     <property name="can_focus">False</property>
@@ -226,10 +243,33 @@
                 <property name="popover">filter_popover</property>
                 <signal name="clicked" handler="on_filter_button_clicked" object="CtmMainWindow" swapped="yes"/>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="icon_name">pan-down-symbolic</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Filter</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="icon_name">pan-down-symbolic</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -239,18 +279,15 @@
             </child>
             <child>
               <object class="GtkButton" id="clear_filter_button">
+                <property name="label" translatable="yes">Filter</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Clear filter options</property>
+                <property name="image">image1</property>
+                <property name="image_position">right</property>
+                <property name="always_show_image">True</property>
                 <signal name="clicked" handler="on_clear_filter_button_clicked" object="CtmMainWindow" swapped="yes"/>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">edit-clear-symbolic</property>
-                  </object>
-                </child>
               </object>
               <packing>
                 <property name="name">clear-filter-page</property>

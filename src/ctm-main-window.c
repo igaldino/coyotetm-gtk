@@ -44,9 +44,6 @@ static gboolean        filter_task_list               (GtkTreeModel      *model,
 static void            on_clear_filter_button_clicked (GtkWidget         *widget,
                                                        gpointer           data);
 
-static void            on_filter_combo_changed        (GtkWidget         *widget,
-                                                       gpointer           data);
-
 static void            on_filter_button_clicked       (GtkWidget         *widget,
                                                        gpointer           data);
 
@@ -56,6 +53,9 @@ static void            on_list_row_activated          (GtkTreeView       *view,
                                                        gpointer           data);
 
 static void            on_new_button_clicked          (GtkWidget         *widget,
+                                                       gpointer           data);
+
+static void            on_set_filter_button_clicked   (GtkWidget         *widget,
                                                        gpointer           data);
 
 static void            show_clear_filter_button       (CtmMainWindow     *self);
@@ -99,7 +99,7 @@ ctm_main_window_class_init (CtmMainWindowClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_new_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, on_filter_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, on_clear_filter_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, on_filter_combo_changed);
+  gtk_widget_class_bind_template_callback (widget_class, on_set_filter_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, on_list_row_activated);
 }
 
@@ -258,18 +258,31 @@ show_clear_filter_button (CtmMainWindow *self)
   GtkTreeModel *model  = NULL;
   GtkTreeModel *filter = NULL;
 
+  if (gtk_combo_box_get_active (self->project_combo) < 0 &&
+      gtk_combo_box_get_active (self->person_combo) < 0)
+    {
+      return;
+    }
+
   model = gtk_tree_view_get_model (self->task_list);
   filter = gtk_tree_model_sort_get_model (GTK_TREE_MODEL_SORT (model));
+  gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (filter));
 
   gtk_stack_set_visible_child_name (self->filter_stack, "clear-filter-page");
-  gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (filter));
 }
 
 static void
 clear_filter_popover (CtmMainWindow *self)
 {
+  GtkTreeModel *model  = NULL;
+  GtkTreeModel *filter = NULL;
+
   gtk_combo_box_set_active (self->project_combo, -1);
   gtk_combo_box_set_active (self->person_combo, -1);
+
+  model = gtk_tree_view_get_model (self->task_list);
+  filter = gtk_tree_model_sort_get_model (GTK_TREE_MODEL_SORT (model));
+  gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (filter));
 
   gtk_stack_set_visible_child_name (self->filter_stack, "filter-page");
 }
@@ -313,8 +326,8 @@ on_clear_filter_button_clicked (GtkWidget *widget,
 }
 
 static void
-on_filter_combo_changed (GtkWidget *widget,
-                         gpointer   data)
+on_set_filter_button_clicked (GtkWidget *widget,
+                              gpointer   data)
 {
   CtmMainWindow *self = CTM_MAIN_WINDOW (widget);
 

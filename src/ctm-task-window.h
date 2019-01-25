@@ -1,6 +1,6 @@
-/* ctm-app.h
+/* ctm-task-window.h
  *
- * Copyright (C) 2016 Isaque Galdino <igaldino@gmail.com>
+ * Copyright 2019 Isaque Galdino <igaldino@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,28 +14,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 #pragma once
 
-#include <gtk/gtk.h>
-#include "ctm-db.h"
+#include "ctm-app.h"
+#include "ctm-task.h"
 
 G_BEGIN_DECLS
 
-#define CTM_TYPE_APP    (ctm_app_get_type ())
-#define CTM_APP_DEFAULT (CTM_APP (g_application_get_default()))
+#define CTM_TYPE_TASK_WINDOW (ctm_task_window_get_type())
 
-G_DECLARE_FINAL_TYPE (CtmApp, ctm_app, CTM, APP, GtkApplication)
+G_DECLARE_FINAL_TYPE (CtmTaskWindow, ctm_task_window, CTM, TASK_WINDOW, GtkWindow)
 
-CtmApp    *ctm_app_new             (void);
+CtmTaskWindow *ctm_task_window_new       (void);
 
-CtmDB     *ctm_app_get_db          (CtmApp     *self);
-
-GtkWindow *ctm_app_get_main_window (CtmApp     *self);
-
-void       ctm_app_message         (GtkWindow  *parent,
-                                    const char *message);
+void           ctm_task_window_show_task (CtmTaskWindow *self,
+                                          CtmTask       *task);
 
 G_END_DECLS
 

@@ -9,6 +9,7 @@ sources = files(
   'ctm-project.c',
   'ctm-resource.c',
   'ctm-task.c',
+  'ctm-task-window.c',
   'ctm-util.c'
 )
 

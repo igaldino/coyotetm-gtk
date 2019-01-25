@@ -284,11 +284,12 @@ clear_filter_popover (CtmMainWindow *self)
 static void
 show_task_panel (CtmMainWindow *self)
 {
+  ctm_task_window_new ();
 }
 
 static void
-edit_task_panel (CtmMainWindow   *self,
-                 GtkTreePath *path)
+edit_task_panel (CtmMainWindow *self,
+                 GtkTreePath   *path)
 {
 }
 

@@ -27,6 +27,7 @@ struct _CtmApp
 {
   GtkApplication  parent_instance;
   CtmDB          *db;
+  GtkWindow      *main_window;
   gboolean        run_tests;
 };
 
@@ -146,7 +147,6 @@ static void
 ctm_app_activate (GApplication *app)
 {
   CtmApp *self = CTM_APP (app);
-  GtkWindow *window = gtk_application_get_active_window (GTK_APPLICATION (app));
   const char *db_name = g_build_filename (g_get_user_data_dir (), "coyotetm.db", NULL);
   GFile *db_file = NULL;
 
@@ -166,10 +166,10 @@ ctm_app_activate (GApplication *app)
       ctm_db_test (self->db);
     }
 
-  if (!window)
-    window = GTK_WINDOW (ctm_main_window_new (self));
+  if (!self->main_window)
+    self->main_window = GTK_WINDOW (ctm_main_window_new (self));
 
-  gtk_window_present (window);
+  gtk_window_present (self->main_window);
 }
 
 static void
@@ -194,6 +194,12 @@ CtmDB *
 ctm_app_get_db (CtmApp *self)
 {
   return self->db;
+}
+
+GtkWindow *
+ctm_app_get_main_window (CtmApp *self)
+{
+  return self->main_window;
 }
 
 void

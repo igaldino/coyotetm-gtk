@@ -20,6 +20,7 @@
 
 #include "ctm-app.h"
 #include "ctm-model.h"
+#include "ctm-task-window.h"
 
 G_BEGIN_DECLS
 

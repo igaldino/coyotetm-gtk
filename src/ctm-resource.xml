@@ -2,6 +2,7 @@
 <gresources>
   <gresource prefix="/org/gtk/CoyoteTM">
     <file preprocess="xml-stripblanks">ctm-main-window.ui</file>
+    <file preprocess="xml-stripblanks">ctm-task-window.ui</file>
   </gresource>
 </gresources>
 

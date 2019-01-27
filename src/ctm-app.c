@@ -27,7 +27,7 @@ struct _CtmApp
 {
   GtkApplication  parent_instance;
   CtmDB          *db;
-  GtkWindow      *main_window;
+  CtmMainWindow  *main_window;
   gboolean        run_tests;
 };
 
@@ -167,9 +167,9 @@ ctm_app_activate (GApplication *app)
     }
 
   if (!self->main_window)
-    self->main_window = GTK_WINDOW (ctm_main_window_new (self));
+    self->main_window = ctm_main_window_new (self);
 
-  gtk_window_present (self->main_window);
+  gtk_window_present (GTK_WINDOW (self->main_window));
 }
 
 static void
@@ -196,7 +196,7 @@ ctm_app_get_db (CtmApp *self)
   return self->db;
 }
 
-GtkWindow *
+CtmMainWindow *
 ctm_app_get_main_window (CtmApp *self)
 {
   return self->main_window;

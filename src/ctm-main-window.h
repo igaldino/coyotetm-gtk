@@ -18,6 +18,8 @@
 
 #pragma once
 
+typedef struct _CtmMainWindow CtmMainWindow;
+
 #include "ctm-app.h"
 #include "ctm-model.h"
 #include "ctm-task-window.h"

@@ -18,8 +18,11 @@
 
 #pragma once
 
+typedef struct _CtmApp CtmApp;
+
 #include <gtk/gtk.h>
 #include "ctm-db.h"
+#include "ctm-main-window.h"
 
 G_BEGIN_DECLS
 
@@ -28,14 +31,14 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (CtmApp, ctm_app, CTM, APP, GtkApplication)
 
-CtmApp    *ctm_app_new             (void);
+CtmApp        *ctm_app_new             (void);
 
-CtmDB     *ctm_app_get_db          (CtmApp     *self);
+CtmDB         *ctm_app_get_db          (CtmApp     *self);
 
-GtkWindow *ctm_app_get_main_window (CtmApp     *self);
+CtmMainWindow *ctm_app_get_main_window (CtmApp     *self);
 
-void       ctm_app_message         (GtkWindow  *parent,
-                                    const char *message);
+void           ctm_app_message         (GtkWindow  *parent,
+                                        const char *message);
 
 G_END_DECLS
 

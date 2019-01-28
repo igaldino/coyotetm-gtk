@@ -36,6 +36,26 @@ enum {
 
 static GParamSpec *properties [N_PROPS];
 
+static char *status_description [] =
+{
+  "Not started",
+  "In progress",
+  "Completed",
+  "Canceled",
+  "On hold",
+  NULL
+};
+
+static char *priority_description [] =
+{
+  "Critical",
+  "High",
+  "Medium",
+  "Low",
+  "None",
+  NULL
+};
+
 CtmModel *
 ctm_model_new (void)
 {
@@ -43,14 +63,6 @@ ctm_model_new (void)
                        "db", ctm_app_get_db (CTM_APP_DEFAULT),
                        NULL);
 }
-
-/*static void
-ctm_model_finalize (GObject *object)
-{
-  CtmModel *self = (CtmModel *)object;
-
-  G_OBJECT_CLASS (ctm_model_parent_class)->finalize (object);
-}*/
 
 static void
 ctm_model_get_property (GObject    *object,
@@ -180,19 +192,21 @@ ctm_model_project_get_all (CtmModel *self)
 }
 
 GtkListStore *
-ctm_model_task_get_all (CtmModel     *self)
+ctm_model_task_get_all (CtmModel *self)
 {
-  GtkListStore *store          = NULL;
-  CtmTask      *task           = NULL;
-  CtmPerson    *person         = NULL;
-  CtmProject   *project        = NULL;
-  GPtrArray    *data           = NULL;
-  GtkTreeIter   iter;
-  char         *begin_string   = NULL;
-  char         *end_string     = NULL;
-  char         *due_string     = NULL;
-  char         *created_string = NULL;
-  char         *updated_string = NULL;
+  GtkListStore    *store          = NULL;
+  CtmTask         *task           = NULL;
+  CtmPerson       *person         = NULL;
+  CtmProject      *project        = NULL;
+  GPtrArray       *data           = NULL;
+  GtkTreeIter      iter;
+  CtmStatusType    status;
+  CtmPriorityType  priority;
+  char            *begin_string   = NULL;
+  char            *end_string     = NULL;
+  char            *due_string     = NULL;
+  char            *created_string = NULL;
+  char            *updated_string = NULL;
 
   data = ctm_db_get_all_tasks (self->db);
   if (!data || !data->len)
@@ -228,6 +242,8 @@ ctm_model_task_get_all (CtmModel     *self)
       person = ctm_db_get_person_by_id (self->db, ctm_task_get_person_id (task));
       project = ctm_db_get_project_by_id (self->db, ctm_task_get_project_id (task));
 
+      status = ctm_task_get_status (task);
+      priority = ctm_task_get_priority (task);
       begin_string = ctm_util_format_date (ctm_task_get_begin (task));
       end_string = ctm_util_format_date (ctm_task_get_end (task));
       due_string = ctm_util_format_date (ctm_task_get_due (task));
@@ -249,10 +265,10 @@ ctm_model_task_get_all (CtmModel     *self)
                           CTM_MODEL_TASK_COLUMN_END_STRING,      end_string,
                           CTM_MODEL_TASK_COLUMN_DUE,             ctm_task_get_due (task),
                           CTM_MODEL_TASK_COLUMN_DUE_STRING,      due_string,
-                          CTM_MODEL_TASK_COLUMN_STATUS,          ctm_task_get_status (task),
-                          CTM_MODEL_TASK_COLUMN_STATUS_STRING,   ctm_task_get_status_string (task),
-                          CTM_MODEL_TASK_COLUMN_PRIORITY,        ctm_task_get_priority (task),
-                          CTM_MODEL_TASK_COLUMN_PRIORITY_STRING, ctm_task_get_priority_string (task),
+                          CTM_MODEL_TASK_COLUMN_STATUS,          status,
+                          CTM_MODEL_TASK_COLUMN_STATUS_STRING,   ctm_model_status_get_description (self, status),
+                          CTM_MODEL_TASK_COLUMN_PRIORITY,        priority,
+                          CTM_MODEL_TASK_COLUMN_PRIORITY_STRING, ctm_model_priority_get_description (self, priority),
                           CTM_MODEL_TASK_COLUMN_CREATED,         ctm_task_get_created (task),
                           CTM_MODEL_TASK_COLUMN_CREATED_STRING,  created_string,
                           CTM_MODEL_TASK_COLUMN_UPDATED,         ctm_task_get_updated (task),
@@ -275,7 +291,7 @@ ctm_model_task_get_all (CtmModel     *self)
 }
 
 GtkListStore *
-ctm_model_event_get_all (CtmModel     *self)
+ctm_model_event_get_all (CtmModel *self)
 {
   GtkListStore *store       = NULL;
   CtmEvent     *event       = NULL;
@@ -323,5 +339,71 @@ ctm_model_event_get_all (CtmModel     *self)
   g_ptr_array_free (data, TRUE);
 
   return store;
+}
+
+GtkListStore *
+ctm_model_status_get_all (CtmModel *self)
+{
+  GtkListStore *store = NULL;
+  GtkTreeIter   iter;
+
+  store = gtk_list_store_new (CTM_MODEL_STATUS_COLUMN_NOO,
+                              G_TYPE_UINT,
+                              G_TYPE_STRING);
+
+  for (int index = 0; index < CTM_STATUS_NOO; index++)
+    {
+      gtk_list_store_append (store, &iter);
+      gtk_list_store_set (store, &iter,
+                          CTM_MODEL_STATUS_COLUMN_ID,   index,
+                          CTM_MODEL_STATUS_COLUMN_NAME, status_description[index],
+                          -1);
+
+    }
+
+  return store;
+}
+
+GtkListStore *
+ctm_model_priority_get_all (CtmModel *self)
+{
+  GtkListStore *store = NULL;
+  GtkTreeIter   iter;
+
+  store = gtk_list_store_new (CTM_MODEL_PRIORITY_COLUMN_NOO,
+                              G_TYPE_UINT,
+                              G_TYPE_STRING);
+
+  for (int index = 0; index < CTM_PRIORITY_NOO; index++)
+    {
+      gtk_list_store_append (store, &iter);
+      gtk_list_store_set (store, &iter,
+                          CTM_MODEL_PRIORITY_COLUMN_ID,   index,
+                          CTM_MODEL_PRIORITY_COLUMN_NAME, priority_description[index],
+                          -1);
+
+    }
+
+  return store;
+}
+
+CtmTask *
+ctm_model_task_get (CtmModel *self,
+                    guint     id)
+{
+  return ctm_db_get_task_by_id (self->db, id);
+}
+
+const char *
+ctm_model_status_get_description (CtmModel      *self,
+                                  CtmStatusType  status)
+{
+  return status_description[status];
+}
+
+const char *ctm_model_priority_get_description (CtmModel        *self,
+                                                CtmPriorityType  priority)
+{
+  return priority_description[priority];
 }
 

@@ -20,6 +20,28 @@
 
 #pragma once
 
+typedef struct _CtmModel CtmModel;
+
+typedef enum
+{
+  CTM_STATUS_NOT_STARTED,
+  CTM_STATUS_IN_PROGRESS,
+  CTM_STATUS_COMPLETED,
+  CTM_STATUS_CANCELED,
+  CTM_STATUS_ON_HOLD,
+  CTM_STATUS_NOO
+} CtmStatusType;
+
+typedef enum
+{
+  CTM_PRIORITY_CRITICAL,
+  CTM_PRIORITY_HIGH,
+  CTM_PRIORITY_MEDIUM,
+  CTM_PRIORITY_LOW,
+  CTM_PRIORITY_NONE,
+  CTM_PRIORITY_NOO
+} CtmPriorityType;
+
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include "ctm-app.h"
@@ -81,15 +103,39 @@ typedef enum
   CTM_MODEL_EVENT_COLUMN_NOO
 } CtmModelEventColumnType;
 
+typedef enum
+{
+  CTM_MODEL_STATUS_COLUMN_ID,
+  CTM_MODEL_STATUS_COLUMN_NAME,
+  CTM_MODEL_STATUS_COLUMN_NOO
+} CtmModelStatusColumnType;
+
+typedef enum
+{
+  CTM_MODEL_PRIORITY_COLUMN_ID,
+  CTM_MODEL_PRIORITY_COLUMN_NAME,
+  CTM_MODEL_PRIORITY_COLUMN_NOO
+} CtmModelPriorityColumnType;
+
 #define CTM_TYPE_MODEL (ctm_model_get_type())
 
 G_DECLARE_FINAL_TYPE (CtmModel, ctm_model, CTM, MODEL, GObject)
 
-CtmModel *ctm_model_new (void);
+CtmModel     *ctm_model_new                      (void);
 
-GtkListStore *ctm_model_person_get_all  (CtmModel *self);
-GtkListStore *ctm_model_project_get_all (CtmModel *self);
-GtkListStore *ctm_model_task_get_all    (CtmModel *self);
-GtkListStore *ctm_model_event_get_all   (CtmModel *self);
+GtkListStore *ctm_model_person_get_all           (CtmModel        *self);
+GtkListStore *ctm_model_project_get_all          (CtmModel        *self);
+GtkListStore *ctm_model_task_get_all             (CtmModel        *self);
+GtkListStore *ctm_model_event_get_all            (CtmModel        *self);
+GtkListStore *ctm_model_status_get_all           (CtmModel        *self);
+GtkListStore *ctm_model_priority_get_all         (CtmModel        *self);
+
+CtmTask      *ctm_model_task_get                 (CtmModel        *self,
+                                                  guint            id);
+
+const char   *ctm_model_status_get_description   (CtmModel        *self,
+                                                  CtmStatusType    status);
+const char   *ctm_model_priority_get_description (CtmModel        *self,
+                                                  CtmPriorityType  priority);
 
 G_END_DECLS

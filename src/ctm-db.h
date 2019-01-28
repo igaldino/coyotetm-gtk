@@ -18,6 +18,8 @@
 
 #pragma once
 
+typedef struct _CtmDB CtmDB;
+
 #include <glib-object.h>
 #include "ctm-person.h"
 #include "ctm-project.h"

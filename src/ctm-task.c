@@ -56,25 +56,6 @@ enum {
 
 static GParamSpec *properties [LAST_PROP];
 
-static char *ctm_task_status_string [] =
-{
-  "Not started",
-  "In progress",
-  "Completed",
-  "Canceled",
-  "On hold"
-};
-
-static char *ctm_task_priority_string [] =
-{
-  "Critical",
-  "High",
-  "Medium",
-  "Low",
-  "None"
-};
-
-
 static void
 ctm_task_finalize (GObject *object)
 {
@@ -448,40 +429,28 @@ ctm_task_set_due (CtmTask   *self,
     }
 }
 
-CtmTaskStatusType
+CtmStatusType
 ctm_task_get_status (CtmTask *self)
 {
   return self->status;
 }
 
-const char *
-ctm_task_get_status_string (CtmTask *self)
-{
-  return ctm_task_status_string [self->status];
-}
-
 void
-ctm_task_set_status (CtmTask           *self,
-                     CtmTaskStatusType  status)
+ctm_task_set_status (CtmTask       *self,
+                     CtmStatusType  status)
 {
   self->status = status;
 }
 
-CtmTaskPriorityType
+CtmPriorityType
 ctm_task_get_priority (CtmTask *self)
 {
   return self->priority;
 }
 
-const char *
-ctm_task_get_priority_string (CtmTask *self)
-{
-  return ctm_task_priority_string [self->priority];
-}
-
 void
 ctm_task_set_priority (CtmTask             *self,
-                       CtmTaskPriorityType  priority)
+                       CtmPriorityType  priority)
 {
   self->priority = priority;
 }

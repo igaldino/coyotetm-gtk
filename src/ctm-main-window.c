@@ -33,7 +33,7 @@ G_DEFINE_TYPE (CtmMainWindow, ctm_main_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static void            clear_filter_popover           (CtmMainWindow     *self);
 
-static void            edit_task_panel                (CtmMainWindow     *self,
+static void            edit_task_window               (CtmMainWindow     *self,
                                                        GtkTreePath       *path);
 
 static gboolean        filter_task_list               (GtkTreeModel      *model,
@@ -63,7 +63,7 @@ static void            show_filter_popover            (CtmMainWindow     *self);
 
 static void            show_task_list                 (CtmMainWindow     *self);
 
-static void            show_task_panel                (CtmMainWindow     *self);
+static void            show_task_window               (CtmMainWindow     *self);
 
 CtmMainWindow *
 ctm_main_window_new (CtmApp *app)
@@ -282,15 +282,28 @@ clear_filter_popover (CtmMainWindow *self)
 }
 
 static void
-show_task_panel (CtmMainWindow *self)
+edit_task_window (CtmMainWindow *self,
+                  GtkTreePath   *path)
 {
-  ctm_task_window_new ();
-}
+  GtkTreeModel    *model       = NULL;
+  GtkTreeIter      iter;
+  int              id;
+  CtmTask         *task        = NULL;
+  CtmTaskWindow   *task_window = NULL;
 
-static void
-edit_task_panel (CtmMainWindow *self,
-                 GtkTreePath   *path)
-{
+  model = gtk_tree_view_get_model (self->task_list);
+
+  if (gtk_tree_model_get_iter (model, &iter, path))
+    {
+      gtk_tree_model_get (model, &iter, CTM_MODEL_TASK_COLUMN_ID, &id, -1);
+      task = ctm_model_task_get (self->model, id);
+    }
+
+  if (task)
+    {
+      task_window = ctm_task_window_new ();
+      ctm_task_window_show_task (task_window, task);
+    }
 }
 
 static void
@@ -299,7 +312,7 @@ on_new_button_clicked (GtkWidget *widget,
 {
   CtmMainWindow *self = CTM_MAIN_WINDOW (widget);
 
-  show_task_panel (self);
+  show_task_window (self);
 }
 
 static void
@@ -337,8 +350,12 @@ on_list_row_activated (GtkTreeView       *view,
 {
   CtmMainWindow *self = CTM_MAIN_WINDOW (data);
 
-  show_task_panel (self);
-  edit_task_panel (self, path);
+  edit_task_window (self, path);
 }
 
+static void
+show_task_window (CtmMainWindow *self)
+{
+  ctm_task_window_new ();
+}
 

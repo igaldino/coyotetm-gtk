@@ -49,7 +49,7 @@
             <property name="row_spacing">6</property>
             <property name="column_spacing">12</property>
             <child>
-              <object class="GtkEntry" id="task_project_entry">
+              <object class="GtkEntry" id="project_entry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="secondary_icon_name">edit-find-symbolic</property>
@@ -61,7 +61,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="task_description_entry">
+              <object class="GtkEntry" id="description_entry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
@@ -72,7 +72,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="task_begin_entry">
+              <object class="GtkEntry" id="begin_entry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="secondary_icon_name">pan-down-symbolic</property>
@@ -84,7 +84,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="task_due_entry">
+              <object class="GtkEntry" id="due_entry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="secondary_icon_name">pan-down-symbolic</property>
@@ -157,7 +157,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="task_person_entry">
+              <object class="GtkEntry" id="person_entry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="secondary_icon_name">edit-find-symbolic</property>
@@ -181,7 +181,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="task_end_entry">
+              <object class="GtkEntry" id="end_entry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="secondary_icon_name">pan-down-symbolic</property>
@@ -200,7 +200,7 @@
                 <property name="vexpand">True</property>
                 <property name="shadow_type">in</property>
                 <child>
-                  <object class="GtkTextView" id="task_notes_entry">
+                  <object class="GtkTextView" id="notes_entry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                   </object>
@@ -213,7 +213,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkComboBox" id="task_status_combo">
+              <object class="GtkComboBox" id="status_combo">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
               </object>
@@ -224,7 +224,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkComboBox" id="task_priority_combo">
+              <object class="GtkComboBox" id="priority_combo">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
               </object>

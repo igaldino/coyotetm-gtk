@@ -283,7 +283,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="on_new_button_clicked" swapped="yes"/>
+            <signal name="clicked" handler="on_new_button_clicked" object="CtmMainWindow" swapped="yes"/>
           </object>
         </child>
         <child>
@@ -356,7 +356,7 @@
       <object class="GtkTreeView" id="task_list">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
-        <signal name="row-activated" handler="on_list_row_activated" swapped="no"/>
+        <signal name="row-activated" handler="on_list_row_activated" object="CtmMainWindow" swapped="yes"/>
         <child internal-child="selection">
           <object class="GtkTreeSelection"/>
         </child>

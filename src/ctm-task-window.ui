@@ -77,6 +77,7 @@
                 <property name="can_focus">True</property>
                 <property name="secondary_icon_name">pan-down-symbolic</property>
                 <property name="placeholder_text" translatable="yes">Begin</property>
+                <signal name="icon-press" handler="on_date_icon_press" object="CtmTaskWindow" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -89,6 +90,7 @@
                 <property name="can_focus">True</property>
                 <property name="secondary_icon_name">pan-down-symbolic</property>
                 <property name="placeholder_text" translatable="yes">Due</property>
+                <signal name="icon-press" handler="on_date_icon_press" object="CtmTaskWindow" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">2</property>
@@ -186,6 +188,7 @@
                 <property name="can_focus">True</property>
                 <property name="secondary_icon_name">pan-down-symbolic</property>
                 <property name="placeholder_text" translatable="yes">End</property>
+                <signal name="icon-press" handler="on_date_icon_press" object="CtmTaskWindow" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">2</property>
@@ -280,4 +283,74 @@
       </object>
     </child>
   </template>
+  <object class="GtkPopover" id="date_popover">
+    <property name="can_focus">False</property>
+    <property name="position">bottom</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="border_width">12</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">6</property>
+        <child>
+          <object class="GtkCalendar" id="calendar">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="year">2019</property>
+            <property name="day">28</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButtonBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="halign">center</property>
+            <property name="layout_style">start</property>
+            <child>
+              <object class="GtkButton">
+                <property name="label" translatable="yes">Today</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="on_calendar_show_today" object="CtmTaskWindow" swapped="yes"/>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton">
+                <property name="label" translatable="yes">Select</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="on_calendar_day_selected" object="CtmTaskWindow" swapped="yes"/>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
 </interface>

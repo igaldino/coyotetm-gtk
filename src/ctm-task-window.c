@@ -32,21 +32,34 @@ struct _CtmTaskWindow
   GtkEntry    *begin_entry;
   GtkEntry    *end_entry;
   GtkTextView *notes_entry;
+  GtkPopover  *date_popover;
+  GtkCalendar *calendar;
   CtmModel    *model;
   CtmTask     *task;
 };
 
 G_DEFINE_TYPE (CtmTaskWindow, ctm_task_window, GTK_TYPE_WINDOW)
 
-static void on_cancel_button_clicked (GtkWidget *widget,
-                                      gpointer   data);
+static void on_calendar_day_selected (GtkWidget            *widget,
+                                      gpointer              data);
 
-static void on_done_button_clicked   (GtkWidget *widget,
-                                      gpointer   data);
+static void on_calendar_show_today   (GtkWidget            *widget,
+                                      gpointer              data);
 
-static void populate_combos          (CtmTaskWindow *self);
+static void on_cancel_button_clicked (GtkWidget            *widget,
+                                      gpointer              data);
 
-static void populate_window          (CtmTaskWindow *self);
+static void on_date_icon_press       (GtkEntry             *entry,
+                                      GtkEntryIconPosition  icon_pos,
+                                      GdkEvent             *event,
+                                      gpointer              data);
+
+static void on_done_button_clicked   (GtkWidget            *widget,
+                                      gpointer              data);
+
+static void populate_combos          (CtmTaskWindow        *self);
+
+static void populate_window          (CtmTaskWindow        *self);
 
 CtmTaskWindow *
 ctm_task_window_new (void)
@@ -82,6 +95,11 @@ ctm_task_window_class_init (CtmTaskWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, CtmTaskWindow, begin_entry);
   gtk_widget_class_bind_template_child (widget_class, CtmTaskWindow, end_entry);
   gtk_widget_class_bind_template_child (widget_class, CtmTaskWindow, notes_entry);
+  gtk_widget_class_bind_template_child (widget_class, CtmTaskWindow, date_popover);
+  gtk_widget_class_bind_template_child (widget_class, CtmTaskWindow, calendar);
+  gtk_widget_class_bind_template_callback (widget_class, on_calendar_day_selected);
+  gtk_widget_class_bind_template_callback (widget_class, on_calendar_show_today);
+  gtk_widget_class_bind_template_callback (widget_class, on_date_icon_press);
   gtk_widget_class_bind_template_callback (widget_class, on_cancel_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, on_done_button_clicked);
 }
@@ -112,12 +130,85 @@ ctm_task_window_show_task (CtmTaskWindow *self,
 }
 
 static void
+on_calendar_day_selected (GtkWidget *widget,
+                          gpointer   data)
+{
+  CtmTaskWindow         *self        = CTM_TASK_WINDOW (widget);
+  GtkWidget             *entry       = NULL;
+  g_autoptr (GDateTime)  date        = NULL;
+  g_autofree char       *date_string = NULL;
+
+  guint year, month, day;
+
+  gtk_calendar_get_date (self->calendar, &year, &month, &day);
+
+  date = ctm_util_new_date (year, month+1, day);
+  if (date)
+    {
+      date_string = ctm_util_format_date (date);
+      if (date_string)
+        {
+          entry = gtk_popover_get_relative_to (self->date_popover);
+          gtk_entry_set_text (GTK_ENTRY (entry), date_string);
+          gtk_popover_popdown (self->date_popover);
+        }
+    }
+}
+
+static void
+on_calendar_show_today (GtkWidget *widget,
+                        gpointer   data)
+{
+  CtmTaskWindow         *self  = CTM_TASK_WINDOW (widget);
+  g_autoptr (GDateTime)  today = ctm_util_get_today ();
+
+  if (today)
+    {
+      gtk_calendar_select_month (self->calendar,
+                                 g_date_time_get_month (today)-1,
+                                 g_date_time_get_year (today));
+      gtk_calendar_select_day (self->calendar, g_date_time_get_day_of_month (today));
+    }
+}
+
+static void
 on_cancel_button_clicked (GtkWidget *widget,
                           gpointer   data)
 {
   CtmTaskWindow *self = CTM_TASK_WINDOW (widget);
 
   gtk_window_close (GTK_WINDOW (self));
+}
+
+static void on_date_icon_press (GtkEntry             *entry,
+                                GtkEntryIconPosition  icon_pos,
+                                GdkEvent             *event,
+                                gpointer              data)
+{
+  CtmTaskWindow         *self  = CTM_TASK_WINDOW (data);
+  const char            *text  = gtk_entry_get_text (entry);
+  g_autoptr (GDateTime)  date  = NULL;
+
+  if (text && g_utf8_strlen (text, -1) > 0)
+    {
+      date = ctm_util_parse_date (text);
+    }
+  else
+    {
+      date = ctm_util_get_today ();
+    }
+
+  if (date)
+    {
+      gtk_calendar_select_month (self->calendar,
+                                 g_date_time_get_month (date)-1,
+                                 g_date_time_get_year (date));
+      gtk_calendar_select_day (self->calendar, g_date_time_get_day_of_month (date));
+    }
+
+  gtk_widget_grab_focus (GTK_WIDGET (entry));
+  gtk_popover_set_relative_to (self->date_popover, GTK_WIDGET (entry));
+  gtk_popover_popup (self->date_popover);
 }
 
 static void

@@ -21,36 +21,6 @@
 #include "ctm-util.h"
 
 GDateTime *
-ctm_util_get_today ()
-{
-  g_autoptr (GDateTime) now = NULL;
-
-  now = g_date_time_new_now_local ();
-  return g_date_time_new_local (g_date_time_get_year (now),
-                                g_date_time_get_month (now),
-                                g_date_time_get_day_of_month (now),
-                                0, 0, 0.0);
-}
-
-GDateTime *
-ctm_util_get_yesterday ()
-{
-  g_autoptr (GDateTime) today = NULL;
-
-  today = ctm_util_get_today ();
-  return g_date_time_add_days (today, -1);
-}
-
-GDateTime *
-ctm_util_get_tomorrow ()
-{
-  g_autoptr (GDateTime) today = NULL;
-
-  today = ctm_util_get_today ();
-  return g_date_time_add_days (today, 1);
-}
-
-GDateTime *
 ctm_util_copy_date (GDateTime *date)
 {
   return g_date_time_new_local (g_date_time_get_year (date),
@@ -63,4 +33,59 @@ char *
 ctm_util_format_date (GDateTime *date)
 {
   return g_date_time_format (date, "%x");
+}
+
+GDateTime *
+ctm_util_get_today ()
+{
+  g_autoptr (GDateTime) now = NULL;
+
+  now = g_date_time_new_now_local ();
+  return g_date_time_new_local (g_date_time_get_year (now),
+                                g_date_time_get_month (now),
+                                g_date_time_get_day_of_month (now),
+                                0, 0, 0.0);
+}
+
+GDateTime *
+ctm_util_get_tomorrow ()
+{
+  g_autoptr (GDateTime) today = NULL;
+
+  today = ctm_util_get_today ();
+  return g_date_time_add_days (today, 1);
+}
+
+GDateTime *
+ctm_util_get_yesterday ()
+{
+  g_autoptr (GDateTime) today = NULL;
+
+  today = ctm_util_get_today ();
+  return g_date_time_add_days (today, -1);
+}
+
+GDateTime *
+ctm_util_new_date (guint year,
+                   guint month,
+                   guint day)
+{
+  return g_date_time_new_local (year, month, day, 0, 0, 0.0);
+}
+
+GDateTime *
+ctm_util_parse_date (const char *date_string)
+{
+  GDate date;
+
+  g_date_clear (&date, 1);
+  g_date_set_parse (&date, date_string);
+  if (g_date_valid (&date))
+    {
+      return g_date_time_new_local (g_date_get_year (&date),
+                                    g_date_get_month (&date),
+                                    g_date_get_day (&date),
+                                    0, 0, 0.0);
+    }
+  return NULL;
 }

@@ -26,13 +26,19 @@ ctm_util_copy_date (GDateTime *date)
   return g_date_time_new_local (g_date_time_get_year (date),
                                 g_date_time_get_month (date),
                                 g_date_time_get_day_of_month (date),
-                                0, 0, 0.0);
+                                0, 0,
+                                g_date_time_get_seconds (date));
 }
 
 char *
 ctm_util_format_date (GDateTime *date)
 {
-  return g_date_time_format (date, "%x");
+  /* Using GOM there is no way to save an empty (NULL)
+   * GDateTime object. So, for valid dates, I'm adding
+   * 1 second to it's value and checking that before formating */
+  if (g_date_time_get_second (date))
+    return g_date_time_format (date, "%x");
+  return NULL;
 }
 
 GDateTime *
@@ -44,7 +50,7 @@ ctm_util_get_today ()
   return g_date_time_new_local (g_date_time_get_year (now),
                                 g_date_time_get_month (now),
                                 g_date_time_get_day_of_month (now),
-                                0, 0, 0.0);
+                                0, 0, 1.0);
 }
 
 GDateTime *
@@ -70,7 +76,7 @@ ctm_util_new_date (guint year,
                    guint month,
                    guint day)
 {
-  return g_date_time_new_local (year, month, day, 0, 0, 0.0);
+  return g_date_time_new_local (year, month, day, 0, 0, 1.0);
 }
 
 GDateTime *
@@ -85,7 +91,7 @@ ctm_util_parse_date (const char *date_string)
       return g_date_time_new_local (g_date_get_year (&date),
                                     g_date_get_month (&date),
                                     g_date_get_day (&date),
-                                    0, 0, 0.0);
+                                    0, 0, 1.0);
     }
   return NULL;
 }

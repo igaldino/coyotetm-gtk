@@ -387,6 +387,20 @@ ctm_model_priority_get_all (CtmModel *self)
   return store;
 }
 
+CtmPerson *
+ctm_model_person_get (CtmModel *self,
+                      guint     id)
+{
+  return ctm_db_get_person_by_id (self->db, id);
+}
+
+CtmProject *
+ctm_model_project_get (CtmModel *self,
+                       guint     id)
+{
+  return ctm_db_get_project_by_id (self->db, id);
+}
+
 CtmTask *
 ctm_model_task_get (CtmModel *self,
                     guint     id)

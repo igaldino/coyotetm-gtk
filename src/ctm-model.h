@@ -130,6 +130,10 @@ GtkListStore *ctm_model_event_get_all            (CtmModel        *self);
 GtkListStore *ctm_model_status_get_all           (CtmModel        *self);
 GtkListStore *ctm_model_priority_get_all         (CtmModel        *self);
 
+CtmPerson    *ctm_model_person_get               (CtmModel        *self,
+                                                  guint            id);
+CtmProject   *ctm_model_project_get              (CtmModel        *self,
+                                                  guint            id);
 CtmTask      *ctm_model_task_get                 (CtmModel        *self,
                                                   guint            id);
 

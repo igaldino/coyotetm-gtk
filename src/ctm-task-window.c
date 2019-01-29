@@ -40,6 +40,8 @@ struct _CtmTaskWindow
 
 G_DEFINE_TYPE (CtmTaskWindow, ctm_task_window, GTK_TYPE_WINDOW)
 
+static void clear_window             (CtmTaskWindow        *self);
+
 static void on_calendar_day_selected (GtkWidget            *widget,
                                       gpointer              data);
 
@@ -125,8 +127,23 @@ ctm_task_window_show_task (CtmTaskWindow *self,
   if (task)
     {
       self->task = task;
+      clear_window (self);
       populate_window (self);
     }
+}
+
+static void
+clear_window (CtmTaskWindow *self)
+{
+  gtk_entry_set_text (self->description_entry, "");
+  gtk_combo_box_set_active_id (self->status_combo, NULL);
+  gtk_combo_box_set_active_id (self->priority_combo, NULL);
+  gtk_entry_set_text (self->due_entry, "");
+  gtk_entry_set_text (self->project_entry, "");
+  gtk_entry_set_text (self->person_entry, "");
+  gtk_entry_set_text (self->begin_entry, "");
+  gtk_entry_set_text (self->end_entry, "");
+  gtk_text_buffer_set_text (gtk_text_view_get_buffer (self->notes_entry), "", -1);
 }
 
 static void
@@ -223,9 +240,9 @@ on_done_button_clicked (GtkWidget *widget,
 static void
 populate_combos (CtmTaskWindow *self)
 {
-  g_autoptr (GtkListStore)  status_store = NULL;
+  g_autoptr (GtkListStore)  status_store   = NULL;
   g_autoptr (GtkListStore)  priority_store = NULL;
-  GtkCellRenderer          *renderer     = NULL;
+  GtkCellRenderer          *renderer       = NULL;
 
   status_store = ctm_model_status_get_all (self->model);
   gtk_combo_box_set_model (self->status_combo, GTK_TREE_MODEL (status_store));
@@ -251,11 +268,21 @@ populate_combos (CtmTaskWindow *self)
 static void
 populate_window (CtmTaskWindow *self)
 {
-  CtmStatusType    status   = ctm_task_get_status (self->task);
-  CtmPriorityType  priority = ctm_task_get_priority (self->task);
-  g_autofree char *due      = ctm_util_format_date (ctm_task_get_due (self->task));
-  g_autofree char *begin    = ctm_util_format_date (ctm_task_get_begin (self->task));
-  g_autofree char *end      = ctm_util_format_date (ctm_task_get_end (self->task));
+  CtmStatusType           status;
+  CtmPriorityType         priority;
+  g_autofree char        *due      = NULL;
+  g_autofree char        *begin    = NULL;
+  g_autofree char        *end      = NULL;
+  g_autoptr (CtmPerson)   person   = NULL;
+  g_autoptr (CtmProject)  project  = NULL;
+
+  status   = ctm_task_get_status (self->task);
+  priority = ctm_task_get_priority (self->task);
+  due      = ctm_util_format_date (ctm_task_get_due (self->task));
+  begin    = ctm_util_format_date (ctm_task_get_begin (self->task));
+  end      = ctm_util_format_date (ctm_task_get_end (self->task));
+  person   = ctm_model_person_get (self->model, ctm_task_get_person_id (self->task));
+  project  = ctm_model_project_get (self->model, ctm_task_get_project_id (self->task));
 
   gtk_entry_set_text (self->description_entry, ctm_task_get_description (self->task));
   gtk_combo_box_set_active_id (self->status_combo,
@@ -268,6 +295,10 @@ populate_window (CtmTaskWindow *self)
     gtk_entry_set_text (self->begin_entry, begin);
   if (end)
     gtk_entry_set_text (self->end_entry, end);
+  if (project && ctm_project_get_name (project))
+    gtk_entry_set_text (self->project_entry, ctm_project_get_name (project));
+  if (person && ctm_person_get_name (person))
+    gtk_entry_set_text (self->person_entry, ctm_person_get_name (person));
 }
 
 

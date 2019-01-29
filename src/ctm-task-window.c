@@ -251,14 +251,23 @@ populate_combos (CtmTaskWindow *self)
 static void
 populate_window (CtmTaskWindow *self)
 {
-  CtmStatusType   status   = ctm_task_get_status (self->task);
-  CtmPriorityType priority = ctm_task_get_priority (self->task);
+  CtmStatusType    status   = ctm_task_get_status (self->task);
+  CtmPriorityType  priority = ctm_task_get_priority (self->task);
+  g_autofree char *due      = ctm_util_format_date (ctm_task_get_due (self->task));
+  g_autofree char *begin    = ctm_util_format_date (ctm_task_get_begin (self->task));
+  g_autofree char *end      = ctm_util_format_date (ctm_task_get_end (self->task));
 
   gtk_entry_set_text (self->description_entry, ctm_task_get_description (self->task));
   gtk_combo_box_set_active_id (self->status_combo,
                                ctm_model_status_get_description (self->model, status));
   gtk_combo_box_set_active_id (self->priority_combo,
                                ctm_model_priority_get_description (self->model, priority));
+  if (due)
+    gtk_entry_set_text (self->due_entry, due);
+  if (begin)
+    gtk_entry_set_text (self->begin_entry, begin);
+  if (end)
+    gtk_entry_set_text (self->end_entry, end);
 }
 
 

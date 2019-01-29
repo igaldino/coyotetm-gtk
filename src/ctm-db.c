@@ -216,14 +216,22 @@ ctm_db_delete (CtmDB       *self,
 void
 ctm_db_test (CtmDB *self)
 {
-  GPtrArray *data = NULL;
-  CtmPerson *person = NULL;
-  CtmProject *project = NULL;
-  CtmTask *task = NULL;
-  CtmEvent *event = NULL;
-  char *description = NULL;
-  char *created_string = NULL;
+  GPtrArray             *data           = NULL;
+  CtmPerson             *person         = NULL;
+  CtmProject            *project        = NULL;
+  CtmTask               *task           = NULL;
+  CtmEvent              *event          = NULL;
+  char                  *description    = NULL;
+  char                  *created_string = NULL;
+  g_autoptr (GDateTime)  yesterday      = NULL;
+  g_autoptr (GDateTime)  today          = NULL;
+  g_autoptr (GDateTime)  tomorrow       = NULL;
   int index, index2, index_person, index_project, index_task;
+
+  /* dates */
+  yesterday = ctm_util_get_yesterday ();
+  today = ctm_util_get_today ();
+  tomorrow = ctm_util_get_tomorrow ();
 
   /* create data */
   index_person = 1;
@@ -273,19 +281,24 @@ ctm_db_test (CtmDB *self)
           ctm_task_set_description (task, description);
           if (index2 == 1)
             {
-              ctm_task_set_created (task, ctm_util_get_today ());
+              ctm_task_set_created (task, today);
+              ctm_task_set_due (task, tomorrow);
+              ctm_task_set_begin (task, today);
               ctm_task_set_status (task, CTM_STATUS_IN_PROGRESS);
               ctm_task_set_priority (task, CTM_PRIORITY_MEDIUM);
             }
           else if (index2 == 2)
             {
-              ctm_task_set_created (task, ctm_util_get_yesterday ());
+              ctm_task_set_created (task, yesterday);
+              ctm_task_set_due (task, today);
+              ctm_task_set_begin (task, yesterday);
+              ctm_task_set_end (task, today);
               ctm_task_set_status (task, CTM_STATUS_ON_HOLD);
               ctm_task_set_priority (task, CTM_PRIORITY_NONE);
             }
           else
             {
-              ctm_task_set_created (task, ctm_util_get_tomorrow ());
+              ctm_task_set_created (task, tomorrow);
               ctm_task_set_status (task, CTM_STATUS_NOT_STARTED);
               ctm_task_set_priority (task, CTM_PRIORITY_LOW);
             }

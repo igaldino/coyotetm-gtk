@@ -82,7 +82,7 @@ ctm_task_window_finalize (GObject *object)
 static void
 ctm_task_window_class_init (CtmTaskWindowClass *klass)
 {
-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  GObjectClass   *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->finalize = ctm_task_window_finalize;
@@ -110,10 +110,6 @@ static void
 ctm_task_window_init (CtmTaskWindow *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
-  gtk_window_set_transient_for (GTK_WINDOW (self),
-                                GTK_WINDOW (ctm_app_get_main_window (CTM_APP_DEFAULT)));
-  gtk_window_set_modal (GTK_WINDOW (self), TRUE);
-  gtk_window_present (GTK_WINDOW (self));
 
   self->model = ctm_model_new ();
 

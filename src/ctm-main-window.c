@@ -63,7 +63,7 @@ static void            show_filter_popover            (CtmMainWindow     *self);
 
 static void            show_task_list                 (CtmMainWindow     *self);
 
-static void            show_task_window               (CtmMainWindow     *self);
+static CtmTaskWindow  *show_task_window               (CtmMainWindow     *self);
 
 CtmMainWindow *
 ctm_main_window_new (CtmApp *app)
@@ -301,7 +301,7 @@ edit_task_window (CtmMainWindow *self,
 
   if (task)
     {
-      task_window = ctm_task_window_new ();
+      task_window = show_task_window (self);
       ctm_task_window_show_task (task_window, task);
     }
 }
@@ -353,9 +353,15 @@ on_list_row_activated (GtkTreeView       *view,
   edit_task_window (self, path);
 }
 
-static void
+static CtmTaskWindow *
 show_task_window (CtmMainWindow *self)
 {
-  ctm_task_window_new ();
+  CtmTaskWindow *task_window = ctm_task_window_new ();
+
+  gtk_window_set_transient_for (GTK_WINDOW (task_window), GTK_WINDOW (self));
+  gtk_window_set_modal (GTK_WINDOW (task_window), TRUE);
+  gtk_window_present (GTK_WINDOW (task_window));
+
+  return task_window;
 }
 

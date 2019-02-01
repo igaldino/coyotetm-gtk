@@ -356,7 +356,7 @@
       <object class="GtkTreeView" id="task_list">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
-        <signal name="row-activated" handler="on_list_row_activated" object="CtmMainWindow" swapped="yes"/>
+        <signal name="row-activated" handler="on_list_row_activated" object="CtmMainWindow" swapped="no"/>
         <child internal-child="selection">
           <object class="GtkTreeSelection"/>
         </child>
